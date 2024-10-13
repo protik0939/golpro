@@ -1,0 +1,97 @@
+.slick-prev {
+    left: 0px !important;
+    z-index: 3;
+    border-radius: 0 50% 50% 0;
+    height: 100%;
+}
+
+.slick-next {
+    right: 0px !important;
+    z-index: 3;
+    border-radius: 50% 0 0 50%;
+    height: 100%;
+}
+
+.slick-prev:hover {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.slick-next:hover {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+}
+
+.slick-prev:before {
+    content: '〈' !important;
+}
+
+.slick-next:before {
+    content: '〉' !important;
+}
+
+.slick-prev:before,
+.slick-next:before {
+    font-size: 20px;
+    line-height: 1;
+    opacity: .75;
+    color: rgb(255, 255, 255);
+}
+
+.slick-list {
+    overflow: unset;
+}
+
+
+/* UpBannerCss.css */
+
+.fade-slide-in {
+    animation: fdeinn 2s forwards, sldinn 1s forwards;
+    animation-delay: 0s, 1s;
+}
+
+.fade-slide-out {
+    animation: fddott 1s forwards, sldott 1s forwards;
+}
+
+@keyframes fdeinn {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes sldinn {
+    0% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fddott {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes sldott {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-40px);
+    }
+}
