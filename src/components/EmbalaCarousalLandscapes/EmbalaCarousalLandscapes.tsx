@@ -7,7 +7,7 @@ import {
     usePrevNextButtons
 } from '../EmblaCarouselArrowButtons'
 import useEmblaCarousel from 'embla-carousel-react'
-import './EmbalaCard.css'
+import './EmbalaLandscapes.css'
 import Link from 'next/link'
 import { slidesInfo } from '@/model/slides-Info'
 import Image from 'next/image'
@@ -24,7 +24,7 @@ type PropType = {
     options?: EmblaOptionsType
 }
 
-const EmbalaCarouselCard: React.FC<PropType> = (props) => {
+const EmbalaCarousalLandscapes: React.FC<PropType> = (props) => {
     const { title, options } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
@@ -51,17 +51,17 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
 
     const getHoverClass = (index: number) => {
         if (index === 0) {
-            return 'big:hover:translate-x-10 !important';
+            return 'big:hover:translate-x-14 !important';
         } else if (index === slidesInfo.length - 1) {
-            return 'big:hover:-translate-x-10 !important';
+            return 'big:hover:-translate-x-14 !important';
         }
         return '';
     };
 
 
     return (
-        <section className="embla_Card">
-            <div className="embla__controls_Card">
+        <section className="embla_Landscapes">
+            <div className="embla__controls_Landscapes">
                 <h1 className="border-l-8 border-secondary text-secondary font-bold pl-2">{title}</h1>
                 <div className="embla__buttons">
                     <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
@@ -71,29 +71,29 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
 
 
 
-            <div className="embla__viewport_Card" ref={emblaRef}>
-                <div className="embla__container_Card">
+            <div className="embla__viewport_Landscapes" ref={emblaRef}>
+                <div className="embla__container_Landscapes">
                     {
                         slidesInfo.map((content, index) => {
 
                             return (
                                 <div key={content.cTitle}
                                     data-tip={`${content.cDescription}`}
-                                    className={`relative overflow-hidden group big:hover:scale-125 hover:z-30 transition-all duration-100 ease-in-out  embla__slide_Card ${getHoverClass(index)}`} >
+                                    className={`relative group big:hover:scale-125 hover:z-30 transition-all duration-100 ease-in-out ${getHoverClass(index)} embla__slide_Landscapes`} >
 
                                     <div className="relative m-2 sm:m-[2px] group-hover:z-30 flex flex-col items-center">
                                         <Link href={`${content.cLink}`}>
                                             <Image
-                                                src={content.cCard}
+                                                src={content.cLandscape}
                                                 alt="Responsive Image"
                                                 width='1000'
-                                                height='563'
-                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 563))}`}
+                                                height='479'
                                                 className="rounded-xl object-cover"
+                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 479))}`}
                                             />
                                         </Link>
 
-                                        <div className="absolute w-full z-4 bottom-0 p-3 sm:p-2 flex flex-col big:group-hover:items-start items-end big:group-hover:animate-slideIn big:group-hover:carousal-bg-pt rounded-b-xl">
+                                        <div className=" w-full absolute z-4 bottom-0 p-3 sm:p-2 flex flex-col big:group-hover:items-start items-end big:group-hover:animate-slideIn big:group-hover:carousal-bg-pt rounded-b-xl">
                                             <Link className="flex flex-col big:group-hover:items-start items-end" href={`${content.cLink}`}>
                                                 <Image
                                                     src={content.cLogo}
@@ -138,4 +138,4 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
     )
 }
 
-export default EmbalaCarouselCard
+export default EmbalaCarousalLandscapes

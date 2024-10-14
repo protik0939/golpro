@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
-import './UpBannerCss.css'
+import './SlickCarousalCss.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { TResDataUpBanner } from '../model/typeScript'
 import Slider, { Settings } from "react-slick";
@@ -14,7 +14,6 @@ export default function TopBanner() {
     const [portrait, setPortrait] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [animating, setAnimating] = useState(false);
-
 
     useEffect(() => {
         const handleResize = () => {
@@ -71,8 +70,7 @@ export default function TopBanner() {
                 slidesInfo.map((content: TResDataUpBanner, index: number) => {
 
                     return (
-                        <div key={content.cTitle} className={`relative flex justify-center items-center sm:aspect-[11/16] aspect-[16/9]}`
-                        } >
+                        <div key={content.cTitle} className={`relative flex justify-center items-center sm:aspect-[11/16] aspect-[16/9]`} >
 
                             <Link href={`${content.cLink}`} className="relative" >
                                 <div className="w-full h-auto relative -z-20" >

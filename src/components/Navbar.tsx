@@ -19,7 +19,7 @@ export default async function Navbar() {
             <div className={`navbar z-50 transition-all duration-300`}>
                 <div className="navbar-start">
                     <Link href={"/"} className="text-slate-400">
-                        <Image className='animated-svg' src={golproLogo} alt="logo" />
+                        <Image className='animated-svg' height={47} width={100} src={golproLogo} alt="logo" />
                     </Link>
                 </div>
                 <div className="navbar-center hidden lg:flex">

@@ -7,7 +7,7 @@ import {
     usePrevNextButtons
 } from '../EmblaCarouselArrowButtons'
 import useEmblaCarousel from 'embla-carousel-react'
-import './EmbalaCard.css'
+import './EmbalaTopTen.css'
 import Link from 'next/link'
 import { slidesInfo } from '@/model/slides-Info'
 import Image from 'next/image'
@@ -16,15 +16,15 @@ import { BiSolidMoviePlay } from 'react-icons/bi'
 import { FaBookReader } from 'react-icons/fa'
 import { IoShareSocialOutline } from 'react-icons/io5'
 import { MdOutlineBookmarkAdd } from 'react-icons/md'
-import toBase64 from '../ToBasesf'
 import shimmer from '../Shimmer'
+import toBase64 from '../ToBasesf'
 
 type PropType = {
     title?: string,
     options?: EmblaOptionsType
 }
 
-const EmbalaCarouselCard: React.FC<PropType> = (props) => {
+const EmbalaCarousalTopTen: React.FC<PropType> = (props) => {
     const { title, options } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
@@ -60,8 +60,8 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
 
 
     return (
-        <section className="embla_Card">
-            <div className="embla__controls_Card">
+        <section className="embla_TopTen">
+            <div className="embla__controls_TopTen">
                 <h1 className="border-l-8 border-secondary text-secondary font-bold pl-2">{title}</h1>
                 <div className="embla__buttons">
                     <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
@@ -71,39 +71,30 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
 
 
 
-            <div className="embla__viewport_Card" ref={emblaRef}>
-                <div className="embla__container_Card">
+            <div className="embla__viewport_TopTen" ref={emblaRef}>
+                <div className="embla__container_TopTen">
                     {
                         slidesInfo.map((content, index) => {
 
                             return (
                                 <div key={content.cTitle}
                                     data-tip={`${content.cDescription}`}
-                                    className={`relative overflow-hidden group big:hover:scale-125 hover:z-30 transition-all duration-100 ease-in-out  embla__slide_Card ${getHoverClass(index)}`} >
+                                    className={`relative group big:hover:scale-125 hover:z-30 transition-all duration-100 ease-in-out ${getHoverClass(index)} embla__slide_TopTen`} >
 
                                     <div className="relative m-2 sm:m-[2px] group-hover:z-30 flex flex-col items-center">
                                         <Link href={`${content.cLink}`}>
                                             <Image
-                                                src={content.cCard}
-                                                alt="Responsive Image"
+                                                src={content.cSquare}
+                                                alt={`${content.cTitle}`}
                                                 width='1000'
-                                                height='563'
-                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 563))}`}
+                                                height='1000'
                                                 className="rounded-xl object-cover"
+                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 1000))}`}
                                             />
                                         </Link>
 
-                                        <div className="absolute w-full z-4 bottom-0 p-3 sm:p-2 flex flex-col big:group-hover:items-start items-end big:group-hover:animate-slideIn big:group-hover:carousal-bg-pt rounded-b-xl">
-                                            <Link className="flex flex-col big:group-hover:items-start items-end" href={`${content.cLink}`}>
-                                                <Image
-                                                    src={content.cLogo}
-                                                    alt={`${content.cTitle}`}
-                                                    width="100"
-                                                    height="100"
-                                                    className="!w-2/3 big:group-hover:!w-1/3 object-cover"
-                                                />
-                                            </Link>
-                                            {/* Hidden content that will slide in and out */}
+                                        <div className=" w-full absolute z-4 bottom-0 p-3 sm:p-2 flex flex-col big:group-hover:items-start items-end big:group-hover:animate-slideIn big:group-hover:carousal-bg-pt rounded-b-xl">
+                                            <h1 className="font-extrabold text-4xl shadow-inner shadow-base-100 aspect-square text-center rounded-full">{index + 1}</h1>
                                             <div className="hidden w-full big:group-hover:block big:group-hover:animate-slideIn animate-slideOut">
                                                 <Link href={`${content.cLink}`}>
                                                     <h1 className="font-bold text-[1vw]">{content.cTitle}</h1>
@@ -138,4 +129,4 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
     )
 }
 
-export default EmbalaCarouselCard
+export default EmbalaCarousalTopTen

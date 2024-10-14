@@ -15,13 +15,20 @@ import { PiHeadphonesFill } from 'react-icons/pi'
 import { BiSolidMoviePlay } from 'react-icons/bi'
 import { FaBookReader } from 'react-icons/fa'
 import { IoShareSocialOutline } from 'react-icons/io5'
+import { MdOutlineBookmarkAdd } from 'react-icons/md'
+import shimmer from '../Shimmer'
+import toBase64 from '../ToBasesf'
 
 type PropType = {
+    title?: string
     options?: EmblaOptionsType
 }
 
+
+
+
 const EmbalaCarousel: React.FC<PropType> = (props) => {
-    const { options } = props
+    const { title, options } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
     const {
@@ -58,7 +65,7 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
     return (
         <section className="embla">
             <div className="embla__controls">
-                <h1 className="border-l-8 border-secondary text-secondary font-bold pl-2">Hot in town</h1>
+                <h1 className="border-l-8 border-secondary text-secondary font-bold pl-2">{title}</h1>
                 <div className="embla__buttons">
                     <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
                     <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
@@ -77,23 +84,26 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
                                     className={`relative group big:hover:scale-125 hover:z-30 transition-all duration-100 ease-in-out ${getHoverClass(index)} embla__slide `} >
 
                                     <div className="relative m-2 sm:m-[2px] group-hover:z-30 flex flex-col items-center">
+
                                         <Link href={`${content.cLink}`}>
                                             <Image
                                                 src={content.cPortrait}
                                                 alt="Responsive Image"
-                                                width='1000'
+                                                width='674'
                                                 height='1000'
+                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 674))}`}
                                                 className="rounded-xl object-cover"
                                             />
                                         </Link>
 
                                         <div className="absolute z-4 bottom-0 p-3 sm:p-2 flex flex-col big:group-hover:items-start items-center big:group-hover:animate-slideIn big:group-hover:carousal-bg-pt rounded-b-xl">
+
                                             <Link className="flex flex-col big:group-hover:items-start items-center" href={`${content.cLink}`}>
                                                 <Image
                                                     src={content.cLogo}
                                                     alt={`${content.cTitle}`}
                                                     width="1000"
-                                                    height="1000"
+                                                    height="674"
                                                     className="!w-2/3 object-cover"
                                                 />
                                             </Link>
@@ -115,6 +125,7 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
                                                     </button></Link>
 
                                                     <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l"><IoShareSocialOutline /></button>
+                                                    <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l"><MdOutlineBookmarkAdd /></button>
 
                                                 </div>
                                             </div>

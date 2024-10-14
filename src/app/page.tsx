@@ -1,45 +1,48 @@
-import SlickSkeletonLoader from '@/model/SlickSkeletonLoader';
+import { SlickSkeletonLoader, SlickSkeletonLoaderCard, SlickSkeletonLoaderLandscapes, SlickSkeletonLoaderSquare } from '@/model/SlickSkeletonLoader';
 import dynamic from 'next/dynamic';
 import { EmblaOptionsType } from 'embla-carousel'
-
+import UpBanner from '@/components/UpBanner/UpBanner';
 const OPTIONS: EmblaOptionsType = { dragFree: true }
+const OPTIONSS: EmblaOptionsType = { loop: true }
 
-// Dynamically loaded components with skeleton loaders
-const TopBanner = dynamic(() => import('@/components/TopBanner'), {
+
+
+const EmbalaCarousel = dynamic(() => import('@/components/EmbalaCarousal/EmbalaCarousel'), {
+  ssr: true,
   loading: () => <SlickSkeletonLoader />,
 });
 
-const EmbalaCarousel = dynamic(() => import('@/components/EmbalaCarousal/EmbalaCarousel'));
+
+const EmbalaCarousalTopTen = dynamic(() => import('@/components/EmbalaCarousalTopTen/EmbalaCarousalTopTen'), {
+  ssr: true,
+  loading: () => <SlickSkeletonLoaderSquare />,
+});
+
 
 const EmbalaCarouselCard = dynamic(() => import('@/components/EmbalaCarousalCard/EmbalaCarouselCard'), {
-  ssr: false,
-  loading: () => <SlickSkeletonLoader />,
+  ssr: true,
+  loading: () => <SlickSkeletonLoaderCard />,
 });
 
-const SlickTopTen = dynamic(() => import('@/components/SlickTopTen'), {
-  ssr: false,
-  loading: () => <SlickSkeletonLoader />,
+
+const EmbalaCarousalLandscapes = dynamic(() => import('@/components/EmbalaCarousalLandscapes/EmbalaCarousalLandscapes'), {
+  ssr: true,
+  loading: () => <SlickSkeletonLoaderLandscapes />,
 });
 
-const SlickCarousalLandScapes = dynamic(() => import('@/components/SlickCarousalLandScapes'), {
-  ssr: false,
-  loading: () => <SlickSkeletonLoader />,
-});
 
-const SlickCarousalCards = dynamic(() => import('@/components/SlickCarousalCards'), {
-  ssr: false,
-  loading: () => <SlickSkeletonLoader />,
-});
+
 
 export default function Page() {
   return (
     <div className='w-full'>
-      <TopBanner />
-      <EmbalaCarousel options={OPTIONS} />
-      <EmbalaCarouselCard options={OPTIONS} />
-      <SlickCarousalCards />
-      <SlickTopTen />
-      <SlickCarousalLandScapes />
+
+      {/* <SlickSkeletonLoaderSquare /> */}
+      <UpBanner options={OPTIONSS} />
+      <EmbalaCarousel title='Hot In Town' options={OPTIONS} />
+      <EmbalaCarousalTopTen title='Golpro Top 10' options={OPTIONS} />
+      <EmbalaCarouselCard title='Winter Vibes' options={OPTIONS} />
+      <EmbalaCarousalLandscapes title='Editors Choices' options={OPTIONS} />
     </div>
   );
 }

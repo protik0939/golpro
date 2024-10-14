@@ -61,8 +61,3 @@
         /* Pause for 1 minute (60s delay) */
     }
 }
-
-.animated-svg {
-    animation: flicker-glow 5s ease-in-out infinite, pause-animation 1m linear infinite;
-    /* Adds 1 minute pause between animations */
-}
