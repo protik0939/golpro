@@ -27,3 +27,31 @@ export interface TsettingBanner {
     beforeChange: (current: number, next: number) => void;
     afterChange: () => void;
 }
+
+export interface TMusicData {
+    id: string;
+    title: string;
+    songSrc: string;
+    songImage: string;
+    singer: string[];
+    description: string;
+  }
+  
+  
+export interface TMusicDataAnn {
+    id: string;
+    title: string;
+    songSrc: string;
+    songImage: string;
+    singer: string[];
+    description: string;
+}
+
+export interface TMusicContextType {
+    selectedMusicIndex: number | null;
+    isPlaying: boolean;
+    isVisible: boolean;
+    playMusic: (index: number) => void;
+    stopMusic: () => void;
+    playControl: () => void;
+}

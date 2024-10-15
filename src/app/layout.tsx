@@ -5,6 +5,9 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { SessionProvider } from "next-auth/react";
+import BottomNav from "@/components/BottomNav";
+import MusicPlayerButton from "./audiobooks/(Components)/MusicPlayerButton";
+import { MusicProvider } from "@/components/MusicContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,10 +28,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             sizes="<generated>"
           />
         </head>
-        <body className={inter.className}>
+        <body className={`${inter.className} sm:!pb-16`}>
           <Navbar />
-          {children}
+          <MusicProvider>
+            <MusicPlayerButton />
+            {children}
+          </MusicProvider>
           <Footer />
+          <BottomNav />
         </body>
       </html>
     </SessionProvider>

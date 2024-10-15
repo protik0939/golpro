@@ -22,15 +22,19 @@ export default async function Navbar() {
                         <Image className='animated-svg' height={47} width={100} src={golproLogo} alt="logo" />
                     </Link>
                 </div>
-                <div className="navbar-center hidden lg:flex">
-                    <NavbarCenter />
+                <div className="navbar-center">
+                    <div className='hidden lg:flex'>
+                        <NavbarCenter />
+                    </div>
                 </div>
+
 
                 <div className="navbar-end">
                     {
                         session ?
                             <div className="dropdown dropdown-end">
                                 <div className='flex items-center justify-center space-x-2'>
+
                                     <button className="btn-circle avatar items-center justify-center" aria-label="User menu">
                                         <div className="w-10 rounded-full">
                                             {session.user?.image ? (

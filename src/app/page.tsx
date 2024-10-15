@@ -2,6 +2,7 @@ import { SlickSkeletonLoader, SlickSkeletonLoaderCard, SlickSkeletonLoaderLandsc
 import dynamic from 'next/dynamic';
 import { EmblaOptionsType } from 'embla-carousel'
 import UpBanner from '@/components/UpBanner/UpBanner';
+import BottomNav from '@/components/BottomNav';
 const OPTIONS: EmblaOptionsType = { dragFree: true }
 const OPTIONSS: EmblaOptionsType = { loop: true }
 
