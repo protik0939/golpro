@@ -10,7 +10,7 @@ export default function page() {
     const { playMusic, isPlaying, selectedMusicIndex, playControl } = useMusic();
 
     const handleClick = (e: number) => {
-        if (isPlaying) {
+        if (isPlaying && e === selectedMusicIndex) {
             playControl();
         }
         else {
@@ -24,9 +24,9 @@ export default function page() {
                 {musicData.map((music: TMusicData, index: number) => {
                     return (
                         <div onClick={() => handleClick(index)}
-                            className={`w-1/5 sm:w-[39%] m-[3px] sm:m-[1px] aspect-square ${selectedMusicIndex === index ? 'animate-pulse' : 'animate-none'}`}
+                            className={`w-1/5 sm:w-[49%] m-[3px] sm:m-[1px] aspect-square ${selectedMusicIndex === index ? 'animate-pulse' : 'animate-none'}`}
                             key={music.id}>
-                            <HoverCard mdt={music} smi={selectedMusicIndex} ipp={isPlaying} idx={index}/>
+                            <HoverCard mdt={music} smi={selectedMusicIndex} ipp={isPlaying} idx={index} />
                         </div>
                     );
                 })}
