@@ -41,7 +41,7 @@ export const HoverCard: React.FC<HoverCardProps> = ({ mdt, smi, ipp, idx }) => {
                         {
                             mdt.singer.map(s => {
                                 return (
-                                    <div className="badge badge-outline sm:text-xs">{s}</div>
+                                    <div key={s.id} className="badge badge-outline sm:text-xs">{s}</div>
                                 )
                             }
 

@@ -11,7 +11,7 @@ import { RiDragMove2Line } from 'react-icons/ri';
 export default function MusicPlayerButton() {
 
     const [dragging, setDragging] = useState(false);
-    const { selectedMusicIndex, isPlaying, isVisible, stopMusic } = useMusic();
+    const { selectedMusicIndex, isPlaying } = useMusic();
 
     const handleStart = () => {
         setDragging(false);

@@ -5,7 +5,7 @@ import { TMusicData } from "@/model/typeScript";
 import { HoverCard } from "./(Components)/HoverCard";
 import { useMusic } from "@/components/MusicContext";
 
-export default function page() {
+export default function Page() {
 
     const { playMusic, isPlaying, selectedMusicIndex, playControl } = useMusic();
 

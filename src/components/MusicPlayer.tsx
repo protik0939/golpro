@@ -23,7 +23,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic }) => {
     const [playbackRate, setPlaybackRate] = useState(1);
     const [isClient, setIsClient] = useState(false); // Check if rendering on client
 
-    const { isVisible, selectedMusicIndex, playMusic, isPlaying, stopMusic, playControl } = useMusic();
+    const { selectedMusicIndex, playMusic, isPlaying, stopMusic, playControl } = useMusic();
 
     useEffect(() => {
         setIsClient(true); // Set to true only on the client side
