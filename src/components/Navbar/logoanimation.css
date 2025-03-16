@@ -1,0 +1,63 @@
+@keyframes flicker-glow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+        transform: scale(1.0);
+    }
+
+    70% {
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+        transform: scale(1.02);
+    }
+
+    75% {
+        filter: drop-shadow(0 0 5px rgba(65, 105, 255, 0.8));
+        transform: scale(1.04);
+    }
+
+    78%,
+    81% {
+        filter: drop-shadow(0 0 3px rgb(65, 105, 255));
+        transform: scale(1.06);
+    }
+
+    84%,
+    87%,
+    91% {
+        filter: drop-shadow(0 0 10px rgba(65, 105, 255, 0.5));
+        transform: scale(1.04);
+    }
+
+    93%,
+    95% {
+        filter: drop-shadow(0 0 5px rgb(65, 105, 255));
+        transform: scale(1.02);
+    }
+
+    60%,
+    100% {
+        filter: drop-shadow(0 0 0 rgba(65, 105, 255, 0));
+        transform: scale(1.0);
+    }
+}
+
+.animated-svg {
+    animation: flicker-glow 60s ease-in-out infinite;
+    animation-delay: 1s;
+}
+
+@keyframes pause-animation {
+
+    0%,
+    100% {
+        opacity: 1;
+        /* Keep visible */
+    }
+
+    10%,
+    100% {
+        opacity: 1;
+        /* Pause for 1 minute (60s delay) */
+    }
+}
