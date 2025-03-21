@@ -14,16 +14,21 @@ import { MdOutlineBookmarkAdd } from 'react-icons/md'
 import Autoplay from 'embla-carousel-autoplay'
 import toBase64 from '../ToBasesf'
 import shimmer from '../Shimmer'
-import { slidesInfo } from '@/DummyApi/slides-Info'
-import { TResDataUpBanner } from '@/DummyApi/typeScript'
+import { IContent } from '@/app/models/types'
+import { PiHeadphonesFill } from 'react-icons/pi'
+import { BiSolidMoviePlay } from 'react-icons/bi'
+import { FaBookReader } from 'react-icons/fa'
+
+
 
 type PropType = {
-    width?: number,
     options?: EmblaOptionsType
+    slidesInfo?: IContent[]
 }
 
 const UpBanner: React.FC<PropType> = (props) => {
-    const { options } = props;
+    const { options, slidesInfo } = props;
+
     const [emblaRef, emblaApi] = useEmblaCarousel(options, [
         Autoplay({ delay: 5000, stopOnInteraction: false })
     ])
@@ -51,12 +56,26 @@ const UpBanner: React.FC<PropType> = (props) => {
         };
     }, [emblaApi]);
 
+
+        const getInteractIcon = (interactType: string) => {
+            switch (interactType) {
+                case 'Listen':
+                    return <PiHeadphonesFill />;
+                case 'Watch':
+                    return <BiSolidMoviePlay />;
+                case 'storyseries':
+                    return <FaBookReader />;
+                default:
+                    return null;
+            }
+        };
+
     return (
         <section className="embla_Upbanner">
             <div className="embla__viewport_Upbanner" ref={emblaRef}>
                 <div className="embla__container_Upbanner">
                     {
-                        slidesInfo.map((content: TResDataUpBanner, index: number) => {
+                        slidesInfo?.map((content: IContent, index: number) => {
 
                             const logoClass = index === visibleSlideIndex ? 'fade-in' : 'fade-out'
 
@@ -65,6 +84,7 @@ const UpBanner: React.FC<PropType> = (props) => {
                                     <Link href={`${content.cLink}`} className="relative">
                                         <div className="w-full h-auto relative -z-20">
                                             <Image
+                                                unoptimized={true}
                                                 src={content.cPortrait}
                                                 alt="Responsive Image"
                                                 width={1094}
@@ -74,6 +94,7 @@ const UpBanner: React.FC<PropType> = (props) => {
                                             />
 
                                             <Image
+                                                unoptimized={true}
                                                 src={content.cLandscape}
                                                 alt="Responsive Image"
                                                 width={2375}
@@ -83,6 +104,7 @@ const UpBanner: React.FC<PropType> = (props) => {
                                             />
 
                                             <Image
+                                                unoptimized={true}
                                                 src={content.cBanner}
                                                 alt="Responsive Image"
                                                 width={2375}
@@ -97,6 +119,7 @@ const UpBanner: React.FC<PropType> = (props) => {
                                     <div className="w-full md:w-1/2 p-2 md:p-5 lg:p-8 absolute h-fill right-0 bottom-0 sm:bottom-0 flex flex-col items-center md:items-end justify-center md:justify-end md:h-full h-1/2 carousal-bg z-2">
                                         <Link href={`${content.cLink}`} className="right-0 bottom-0 sm:bottom-0 flex flex-col items-center md:items-end md:justify-end">
                                             <Image
+                                                unoptimized={true}
                                                 src={content.cLogo}
                                                 alt="Logo Image"
                                                 width='200'
@@ -107,13 +130,6 @@ const UpBanner: React.FC<PropType> = (props) => {
                                             <h1 className="text-secondary md:text-right text-center text-base mt-4 font-bold">
                                                 {content.cTitle}
                                             </h1>
-                                            <div className="flex text-xs space-x-2">
-                                                {
-                                                    content.cGenre.map((g) => (
-                                                        <h1 key={g}> { g } </h1>
-                                                    ))
-                                                }
-                                            </div>
                                             <h1 className="text-secondary md:text-right text-center text-sm mt-4">
                                                 {content.cDescription}
                                             </h1>
@@ -121,7 +137,7 @@ const UpBanner: React.FC<PropType> = (props) => {
 
                                         <div className="flex space-x-2 z-2 mb-10 md:mb-0">
                                             <Link href={`${content.cLink}`}>
-                                                <button className="btn btn-primary mt-2">{content.cinteract}</button>
+                                                <button className="btn btn-primary mt-2">{getInteractIcon(content.cContentType)}</button>
                                             </Link>
                                             <button className="btn btn-primary mt-2 space-x-1">
                                                 <h1>Bookmark</h1>

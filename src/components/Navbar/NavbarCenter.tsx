@@ -61,16 +61,17 @@ export default function NavbarCenter() {
                 <li><Link href={'/'}><div className={`flex space-x-1.5 justify-center items-center ${isActive('/')} hover:scale-105 rounded-lg p-2 transition duration-200 ease-in-out`}><IoHome className='text-lg' /><h1>Home</h1></div></Link></li>
                 <li><Link href={'/genre'}><div className={`flex space-x-1.5 justify-center items-center ${isActive('/genre')} hover:scale-105 rounded-lg p-2 transition duration-200 ease-in-out`}><GiDramaMasks className='text-lg' /><h1>Genre</h1></div></Link></li>
                 <li><Link href={'/audiobooks'}><div className={`flex space-x-1.5 justify-center items-center ${isActive('/audiobooks')} hover:scale-105 rounded-lg p-2 transition duration-200 ease-in-out`}><SiAudiobookshelf className='text-lg' /><h1>Audiobook</h1></div></Link></li>
-                
+
                 {/* More Dropdown */}
                 <li className="dropdown relative">
                     <button onClick={() => toggleDropdown('more')} className="bg-primary/0 hover:bg-primary/20 hover:backdrop-blur-md flex cursor-pointer space-x-1.5 justify-center items-center hover:scale-105 rounded-lg p-2 transition duration-200 ease-in-out">
-                        <TbMenu4 className='text-lg'/>
+                        <TbMenu4 className='text-lg' />
                         <h1>More</h1>
                         <FaAngleDown className={`text-lg transition-transform duration-300 ${openDropdown === 'more' ? 'rotate-180' : ''}`} />
                     </button>
                     {openDropdown === 'more' && (
                         <ul className="absolute left-0 mt-2 dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm">
+                            <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/authors'}>Authors</Link></li>
                             <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/terms'}>Terms of use</Link></li>
                             <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/privacy'}>Privacy Policy</Link></li>
                             <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/about'}>About us</Link></li>
@@ -81,19 +82,18 @@ export default function NavbarCenter() {
                 {/* Theme Dropdown */}
                 <li className="dropdown relative">
                     <button onClick={() => toggleDropdown('theme')} className="bg-primary/0 hover:bg-primary/20 hover:backdrop-blur-md flex cursor-pointer space-x-1.5 justify-center items-center hover:scale-105 rounded-lg p-2 transition duration-200 ease-in-out">
-                        <BsStars className='text-lg'/>
+                        <BsStars className='text-lg' />
                         <h1>Theme</h1>
                         <FaAngleDown className={`text-lg transition-transform duration-300 ${openDropdown === 'theme' ? 'rotate-180' : ''}`} />
                     </button>
                     {openDropdown === 'theme' && (
                         <ul className="absolute left-0 mt-2 dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm">
                             {themeList.map((themeName) => (
-                                <li
-                                    key={themeName}
-                                    className={`p-2 rounded-lg cursor-pointer transition duration-200 bg-primary/0 hover:bg-primary/20 shadow-0 hover:shadow-md hover:shadow-secondary ${theme === themeName ? 'bg-primary' : ''}`}
-                                    onClick={() => handleThemeChange(themeName)}
-                                >
-                                    {themeName} Mode
+                                <li key={themeName}>
+                                    <button className={`p-2 rounded-lg cursor-pointer transition duration-200 bg-primary/0 hover:bg-primary/20 shadow-0 hover:shadow-md hover:shadow-secondary ${theme === themeName ? 'bg-primary' : ''}`}
+                                        onClick={() => handleThemeChange(themeName)}>
+                                        {themeName} Mode
+                                    </button>
                                 </li>
                             ))}
                         </ul>

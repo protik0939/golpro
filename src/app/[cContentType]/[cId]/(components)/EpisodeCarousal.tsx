@@ -1,13 +1,8 @@
 'use client'
 import React from 'react'
 import { EmblaOptionsType } from 'embla-carousel'
-import {
-    PrevButton,
-    NextButton,
-    usePrevNextButtons
-} from '../EmblaCarouselArrowButtons'
 import useEmblaCarousel from 'embla-carousel-react'
-import './EmbalaLandscapes.css'
+import './EmbalaCard.css'
 import Link from 'next/link'
 import Image from 'next/image'
 import { PiHeadphonesFill } from 'react-icons/pi'
@@ -15,18 +10,20 @@ import { BiSolidMoviePlay } from 'react-icons/bi'
 import { FaBookReader } from 'react-icons/fa'
 import { IoShareSocialOutline } from 'react-icons/io5'
 import { MdOutlineBookmarkAdd } from 'react-icons/md'
-import toBase64 from '../ToBasesf'
-import shimmer from '../Shimmer'
-import { IContent } from '@/app/models/types'
+import { IEpisode } from '@/app/models/types'
+import { NextButton, PrevButton, usePrevNextButtons } from '@/components/EmblaCarouselArrowButtons'
+import toBase64 from '@/components/ToBasesf'
+import shimmer from '@/components/Shimmer'
 
 type PropType = {
     title?: string,
     options?: EmblaOptionsType
-    slidesInfo?: IContent[]
+    slidesInfo?: IEpisode[]
+    contentType?: string;
 }
 
-const EmbalaCarousalLandscapes: React.FC<PropType> = (props) => {
-    const { title, options, slidesInfo } = props
+const EpisodeCarousal: React.FC<PropType> = (props) => {
+    const { title, options, contentType, slidesInfo } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
     const {
@@ -52,17 +49,17 @@ const EmbalaCarousalLandscapes: React.FC<PropType> = (props) => {
 
     const getHoverClass = (index: number) => {
         if (index === 0) {
-            return 'md:hover:translate-x-10 !important';
+            return 'md:hover:translate-x-6 !important tooltip-left';
         } else if (index === (slidesInfo?.length ?? 0) - 1) {
-            return 'md:hover:-translate-x-10 !important';
+            return 'md:hover:-translate-x-6 !important tooltip-right';
         }
         return '';
     };
 
 
     return (
-        <section className="embla_Landscapes">
-            <div className="embla__controls_Landscapes">
+        <section className="embla_Card">
+            <div className="embla__controls_Card">
                 <h1 className="border-l-8 border-secondary text-secondary font-bold pl-2">{title}</h1>
                 <div className="embla__buttons">
                     <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
@@ -72,29 +69,30 @@ const EmbalaCarousalLandscapes: React.FC<PropType> = (props) => {
 
 
 
-            <div className="embla__viewport_Landscapes" ref={emblaRef}>
-                <div className="embla__container_Landscapes">
+            <div className="embla__viewport_Card" ref={emblaRef}>
+                <div className="embla__container_Card">
                     {
                         (slidesInfo ?? []).map((content, index) => {
 
                             return (
                                 <div key={content.cTitle}
                                     data-tip={`${content.cDescription}`}
-                                    className={`relative group md:hover:scale-110 hover:z-30 transition-all duration-100 ease-in-out ${getHoverClass(index)} embla__slide_Landscapes sliderBgGroup`} >
+                                    className={`relative group md:hover:scale-110 hover:z-30 transition-all duration-100 ease-in-out  embla__slide_Card ${getHoverClass(index)} sliderBgGroup` } >
 
                                     <div className="relative md:m-2 m-[2px] group-hover:z-30 flex flex-col items-center">
+                                    <h1 className='absolute top-2 right-2 shadow-2xl bg-black/30 backdrop-blur:lg p-1 rounded-lg text-xs'>Episode {content.cNo}</h1>
                                         <Link href={`${content.cLink}`}>
                                             <Image
-                                                src={content.cLandscape}
+                                                src={content.cCard}
                                                 alt="Responsive Image"
                                                 width='1000'
-                                                height='479'
+                                                height='563'
+                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 563))}`}
                                                 className="rounded-xl object-cover"
-                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 479))}`}
                                             />
                                         </Link>
 
-                                        <div className=" w-full absolute bottom-0 md:p-3 p-2 flex flex-col md:group-hover:items-start items-end md:group-hover:animate-slideIn cards-bg rounded-b-xl">
+                                        <div className="absolute z-4 bottom-0 md:p-3 p-2 flex flex-col md:group-hover:items-start items-end md:group-hover:animate-slideIn cards-bg w-full rounded-b-xl ">
                                             <Link className="flex flex-col md:group-hover:items-start items-end" href={`${content.cLink}`}>
                                                 <Image
                                                     src={content.cLogo}
@@ -118,7 +116,7 @@ const EmbalaCarousalLandscapes: React.FC<PropType> = (props) => {
                                                 <div className="flex z-40 space-x-1">
 
                                                     <Link href={`${content.cLink}`}><button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l">
-                                                        {getInteractIcon(content.cContentType)}
+                                                        {getInteractIcon(contentType ?? "")}
                                                     </button></Link>
 
                                                     <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l"><IoShareSocialOutline /></button>
@@ -139,4 +137,4 @@ const EmbalaCarousalLandscapes: React.FC<PropType> = (props) => {
     )
 }
 
-export default EmbalaCarousalLandscapes
+export default EpisodeCarousal

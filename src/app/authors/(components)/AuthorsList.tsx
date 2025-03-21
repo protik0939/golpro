@@ -6,23 +6,23 @@ import toBase64 from "@/components/ToBasesf";
 import shimmer from "@/components/Shimmer";
 import Link from "next/link";
 
-export default function Genre() {
-  const [genres, setGenres] = useState([]);
+export default function AuthorsList() {
+  const [authors, setAuthors] = useState([]);
   const [loading, setLoading] = useState(true); // Track loading state
 
   useEffect(() => {
-    const fetchGenres = async () => {
+    const fetchAuthors = async () => {
       try {
-        const { data } = await axios.get("/api/genrecrud/genreget");
-        setGenres(data);
+        const { data } = await axios.get("/api/authorscrud/authorGet");
+        setAuthors(data);
       } catch (error) {
-        console.error("Error fetching genres:", error);
+        console.error("Error fetching authors:", error);
       } finally {
         setLoading(false); // Stop loading after fetching
       }
     };
 
-    fetchGenres();
+    fetchAuthors();
   }, []);
 
   return (
@@ -32,22 +32,22 @@ export default function Genre() {
         {loading &&
           Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="w-1/5 p-2 animate-pulse flex flex-col justify-center">
-              <div className="w-full h-auto aspect-video skeletonLoaderBg rounded-xl"></div>
+              <div className="w-full h-auto aspect-square skeletonLoaderBg rounded-xl"></div>
             </div>
           ))}
 
         {!loading &&
-          genres.map((genre: any) => (
-            <Link key={genre.genreId} className="relative flex justify-center w-full md:w-1/3 lg:w-1/5 p-2 cards-bg group" href={`genres/${genre.genreName}`}>
+          authors.map((author: any) => (
+            <Link key={author._id} className="relative flex justify-center w-full md:w-1/3 lg:w-1/5 p-2 cards-bg group" href={`authors/${author.authorId}`}>
               <Image
-                src={genre.imageUrl}
-                alt={genre.genreName}
-                width={480}
-                height={270}
-                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(480, 270))}`}
+                src={author.imageUrl}
+                alt="Responsive Image"
+                width={700}
+                height={700}
+                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 700))}`}
                 className="relative rounded-xl object-cover group-hover:border-4 group-hover:border-primary"
               />
-              <h1 className="absolute bottom-5 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded">{genre.genreName}</h1>
+              <h1 className="absolute bottom-5 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded">{author.fullName}</h1>
             </Link>
           ))}
       </div>

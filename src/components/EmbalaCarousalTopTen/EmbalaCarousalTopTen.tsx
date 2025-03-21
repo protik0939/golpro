@@ -17,15 +17,16 @@ import { IoShareSocialOutline } from 'react-icons/io5'
 import { MdOutlineBookmarkAdd } from 'react-icons/md'
 import shimmer from '../Shimmer'
 import toBase64 from '../ToBasesf'
-import { slidesInfo } from '@/DummyApi/slides-Info'
+import { IContent } from '@/app/models/types'
 
 type PropType = {
     title?: string,
     options?: EmblaOptionsType
+    slidesInfo?: IContent[]
 }
 
 const EmbalaCarousalTopTen: React.FC<PropType> = (props) => {
-    const { title, options } = props
+    const { title, options, slidesInfo } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
     const {
@@ -42,7 +43,7 @@ const EmbalaCarousalTopTen: React.FC<PropType> = (props) => {
                 return <PiHeadphonesFill />;
             case 'Watch':
                 return <BiSolidMoviePlay />;
-            case 'Read':
+            case 'storyseries':
                 return <FaBookReader />;
             default:
                 return null;
@@ -52,7 +53,7 @@ const EmbalaCarousalTopTen: React.FC<PropType> = (props) => {
     const getHoverClass = (index: number) => {
         if (index === 0) {
             return 'md:hover:translate-x-4 !important';
-        } else if (index === slidesInfo.length - 1) {
+        } else if (index === (slidesInfo?.length ?? 0) - 1) {
             return 'md:hover:-translate-x-4 !important';
         }
         return '';
@@ -74,7 +75,7 @@ const EmbalaCarousalTopTen: React.FC<PropType> = (props) => {
             <div className="embla__viewport_TopTen" ref={emblaRef}>
                 <div className="embla__container_TopTen">
                     {
-                        slidesInfo.map((content, index) => {
+                        (slidesInfo ?? []).map((content, index) => {
 
                             return (
                                 <div key={content.cTitle}
@@ -93,7 +94,7 @@ const EmbalaCarousalTopTen: React.FC<PropType> = (props) => {
                                             />
                                         </Link>
 
-                                        <div className=" w-full absolute z-4 bottom-0 md:p-3 p-2 flex flex-col md:group-hover:items-start items-end md::group-hover:animate-slideIn cards-bg w-full rounded-b-xl">
+                                        <div className="absolute z-4 bottom-0 md:p-3 p-2 flex flex-col md:group-hover:items-start items-end md::group-hover:animate-slideIn cards-bg w-full rounded-b-xl">
                                             <h1 className="font-extrabold text-4xl shadow-inner shadow-base-100 aspect-square text-center rounded-full">{index + 1}</h1>
                                             <div className="hidden w-full md:group-hover:block md:group-hover:animate-slideIn animate-slideOut">
                                                 <Link href={`${content.cLink}`}>
@@ -108,7 +109,7 @@ const EmbalaCarousalTopTen: React.FC<PropType> = (props) => {
                                                 <div className="flex z-40 space-x-1">
 
                                                     <Link href={`${content.cLink}`}><button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l">
-                                                        {getInteractIcon(content.cinteract)}
+                                                        {getInteractIcon(content.cContentType)}
                                                     </button></Link>
 
                                                     <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l"><IoShareSocialOutline /></button>

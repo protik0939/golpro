@@ -1,4 +1,5 @@
 export interface TResDataUpBanner {
+    cId: string;
     cTitle: string;
     cDescription: string;
     cLandscape: string;
@@ -15,6 +16,9 @@ export interface TResDataUpBanner {
     width: number;
     height: number;
     cGenre: string[];
+    cUserVisit: number;
+    cAuthors: string[];
+    cViwersAge: string; 
 }
 
 export interface TsettingBanner {

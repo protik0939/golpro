@@ -18,18 +18,19 @@ import { IoShareSocialOutline } from 'react-icons/io5'
 import { MdOutlineBookmarkAdd } from 'react-icons/md'
 import shimmer from '../Shimmer'
 import toBase64 from '../ToBasesf'
-import { slidesInfo } from '@/DummyApi/slides-Info'
+import { IContent } from '@/app/models/types'
 
 type PropType = {
     title?: string
     options?: EmblaOptionsType
+    slidesInfo?: IContent[]
 }
 
 
 
 
 const EmbalaCarousel: React.FC<PropType> = (props) => {
-    const { title, options } = props
+    const { title, options,  slidesInfo } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
     const {
@@ -46,7 +47,7 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
                 return <PiHeadphonesFill />;
             case 'Watch':
                 return <BiSolidMoviePlay />;
-            case 'Read':
+            case 'storyseries':
                 return <FaBookReader />;
             default:
                 return null;
@@ -56,22 +57,12 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
     const getHoverClass = (index: number) => {
         if (index === 0) {
             return 'md:hover:translate-x-4 !important';
-        } else if (index === slidesInfo.length - 1) {
+        } else if (index === (slidesInfo?.length ?? 0) - 1) {
             return 'md:hover:-translate-x-4 !important';
         }
         return '';
     };
 
-
-    
-    const getTooltipClass = (index: number) => {
-        if (index === 0) {
-            return 'tooltip-left';
-        } else if (index === slidesInfo.length - 1) {
-            return 'tooltip-right';
-        }
-        return '';
-    };
 
 
     return (
@@ -89,7 +80,7 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
             <div className="embla__viewport" ref={emblaRef}>
                 <div className="embla__container">
                     {
-                        slidesInfo.map((content, index) => {
+                        (slidesInfo ?? []).map((content, index) => {
 
                             return (
                                 <div key={content.cTitle}
@@ -122,7 +113,7 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
                                             <div className="hidden w-full md:group-hover:block md:group-hover:animate-slideIn animate-slideOut">
                                                 <Link href={`${content.cLink}`}>
                                                     <h1 className="font-bold text-[1vw]">{content.cTitle}</h1>
-                                                    <p className={`text-[.7vw] tooltip tooltip-primary ${getTooltipClass}`} data-tip={content.cDescription}>
+                                                    <p className={`text-[.7vw] tooltip tooltip-primary`} data-tip={content.cDescription}>
                                                         {content.cDescription.length > 50
                                                             ? content.cDescription.slice(0, 50) + '...'
                                                             : content.cDescription
@@ -132,7 +123,7 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
                                                 <div className="flex z-40 space-x-1">
 
                                                     <Link href={`${content.cLink}`}><button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l">
-                                                        {getInteractIcon(content.cinteract)}
+                                                        {getInteractIcon(content.cContentType)}
                                                     </button></Link>
 
                                                     <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l"><IoShareSocialOutline /></button>

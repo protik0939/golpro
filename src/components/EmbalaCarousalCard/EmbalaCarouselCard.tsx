@@ -17,15 +17,16 @@ import { IoShareSocialOutline } from 'react-icons/io5'
 import { MdOutlineBookmarkAdd } from 'react-icons/md'
 import toBase64 from '../ToBasesf'
 import shimmer from '../Shimmer'
-import { slidesInfo } from '@/DummyApi/slides-Info'
+import { IContent } from '@/app/models/types'
 
 type PropType = {
     title?: string,
     options?: EmblaOptionsType
+    slidesInfo?: IContent[]
 }
 
 const EmbalaCarouselCard: React.FC<PropType> = (props) => {
-    const { title, options } = props
+    const { title, options, slidesInfo } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
     const {
@@ -42,7 +43,7 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
                 return <PiHeadphonesFill />;
             case 'Watch':
                 return <BiSolidMoviePlay />;
-            case 'Read':
+            case 'storyseries':
                 return <FaBookReader />;
             default:
                 return null;
@@ -52,7 +53,7 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
     const getHoverClass = (index: number) => {
         if (index === 0) {
             return 'md:hover:translate-x-6 !important tooltip-left';
-        } else if (index === slidesInfo.length - 1) {
+        } else if (index === (slidesInfo?.length ?? 0) - 1) {
             return 'md:hover:-translate-x-6 !important tooltip-right';
         }
         return '';
@@ -74,7 +75,7 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
             <div className="embla__viewport_Card" ref={emblaRef}>
                 <div className="embla__container_Card">
                     {
-                        slidesInfo.map((content, index) => {
+                        (slidesInfo ?? []).map((content, index) => {
 
                             return (
                                 <div key={content.cTitle}
@@ -117,7 +118,7 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
                                                 <div className="flex z-40 space-x-1">
 
                                                     <Link href={`${content.cLink}`}><button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l">
-                                                        {getInteractIcon(content.cinteract)}
+                                                        {getInteractIcon(content.cContentType)}
                                                     </button></Link>
 
                                                     <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l"><IoShareSocialOutline /></button>

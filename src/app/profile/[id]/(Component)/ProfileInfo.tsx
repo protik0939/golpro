@@ -10,6 +10,7 @@ import '/node_modules/react-cropper/node_modules/cropperjs/dist/cropper.css';
 import axios from 'axios';
 import { TbPhotoEdit } from 'react-icons/tb';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function ProfileInfo() {
     const { data: session, status } = useSession();
@@ -302,7 +303,7 @@ export default function ProfileInfo() {
                                 :
                                 <>
                                     <button onClick={handleSave} disabled={uploadingImageToServer || checkingUsername} className="btn btn-primary">Save</button>
-                                    <button onClick={() => setIsEditing(false)}  disabled={uploadingImageToServer || checkingUsername} className="btn bg-red-500">Cancel</button>
+                                    <button onClick={() => setIsEditing(false)} disabled={uploadingImageToServer || checkingUsername} className="btn bg-red-500">Cancel</button>
                                 </>
                         ) : (
                             <div className='w-full flex items-center justify-center'>
@@ -313,6 +314,12 @@ export default function ProfileInfo() {
                     </div>
                 </div>
             </div>
+            {
+                session?.user.email === 'protik0939@gmail.com' ?
+                    <Link className='w-full flex justify-center items-center' href={'/admin/editing/restricted'}><button className='btn btn-primary'>Upload Contents</button></Link>
+                    :
+                    ''
+            }
             <div className="absolute w-1/4 h-1/2 -z-40 blur-[130px] bg-gradient-to-r from-[#436be1] to-[#436be1] animate-glow-spread" />
 
             <div className="flex justify-center items-center w-full h-[1000px] absolute overflow-hidden -z-40">

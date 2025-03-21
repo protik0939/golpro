@@ -8,7 +8,6 @@ import Link from 'next/link';
 import Example from './button';
 import NavbarCenter from './NavbarCenter';
 import { signOut, useSession } from 'next-auth/react';
-// import { signOut } from '../../auth'; 
 
 
 
@@ -32,7 +31,9 @@ export default function Navbar() {
 
                 <div className="navbar-end">
                     {
-                        data ?
+                        status === 'loading' ? (
+                            <div className='p-2 aspect-square rounded-full bg-primary/20 backdrop-blur-md'><span className="loading loading-infinity loading-md" /></div>
+                        ) : data ? (
                             <div className="dropdown dropdown-end">
                                 <div className='flex items-center justify-center space-x-2'>
 
@@ -50,26 +51,25 @@ export default function Navbar() {
                                             ) : (
                                                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                                                     {/* Placeholder if no image */}
-                                                    <span className="text-gray-400">{data.user.name[0]}</span>
+                                                    <span className="text-black">{data.user.name[0]}</span>
                                                 </div>
                                             )}
                                         </div>
                                     </button>
                                 </div>
                                 <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                                    <li  className='bg-primary/0 hover:bg-primary/20 shadow-none hover:shadow-sm hover:shadow-secondary transition-all duration-200 ease-in-out rounded-lg'>
+                                    <li className='bg-primary/0 hover:bg-primary/20 shadow-none hover:shadow-sm hover:shadow-secondary transition-all duration-200 ease-in-out rounded-lg'>
                                         <Link href={`/profile/${data.user?.username}`} className="justify-between">
                                             Profile
                                         </Link>
                                     </li>
-                                    <li  className='bg-primary/0 hover:bg-primary/20 shadow-none hover:shadow-sm hover:shadow-secondary transition-all duration-200 ease-in-out rounded-lg'><Link href={''}>Settings</Link></li>
-                                    <li  className='bg-primary/0 hover:bg-primary/20 shadow-none hover:shadow-sm hover:shadow-secondary transition-all duration-200 ease-in-out rounded-lg'>
-                                            <button onClick={() => signOut()}>Sign Out</button>
+                                    <li className='bg-primary/0 hover:bg-primary/20 shadow-none hover:shadow-sm hover:shadow-secondary transition-all duration-200 ease-in-out rounded-lg'><Link href={''}>Settings</Link></li>
+                                    <li className='bg-primary/0 hover:bg-primary/20 shadow-none hover:shadow-sm hover:shadow-secondary transition-all duration-200 ease-in-out rounded-lg'>
+                                        <button onClick={() => signOut()}>Sign Out</button>
                                     </li>
-
-
                                 </ul>
                             </div>
+                        )
                             :
                             <Link href={'/login'}><Example /></Link>
                     }

@@ -179,6 +179,54 @@
 
 
 
+
+.contents-bg {
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+
+
+[data-theme="Dark"] .contents-bg {
+  background: linear-gradient(
+    0deg,
+    rgba(4, 4, 13, 1) 0%,
+    rgba(4, 4, 13, 0) 100%
+  );
+}
+
+
+
+[data-theme="Light"] .contents-bg {
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+
+
+.skeletonLoaderBg {
+  background: linear-gradient(110deg, rgba(11,14,128,1) 0%, rgba(18,0,52,1) 100%);
+}
+
+
+[data-theme="Dark"] .skeletonLoaderBg {
+  background: linear-gradient(110deg, rgba(11,14,128,1) 0%, rgba(18,0,52,1) 100%);
+}
+
+
+
+[data-theme="Light"] .skeletonLoaderBg {
+  background: linear-gradient(110deg, rgb(218 219 255) 0%, rgb(89 130 255) 100%);
+}
+
+
+
 /* Custom Theme Configurations */
 @theme {
   --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
