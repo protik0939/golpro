@@ -16,6 +16,9 @@ export async function GET() {
                 "cAuthors": 1,
                 "cGenre": 1,
                 "cSquare": 1,
+                "cId": 1,
+                "cDescription": 1,
+                "cTitle": 1,
                 _id: 0
             }
         ).populate("cSeasons.cEpisodes.cGenre")

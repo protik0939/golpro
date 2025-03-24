@@ -1,29 +1,14 @@
 'use client';
-
-import { useAudioPlayer } from '@/app/context/AudioPlayerContext';
+import { useMusic } from '@/app/context/MusicContext';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { HoverCard } from './HoverCard';
+import { IAudio } from '@/DummyApi/typeScript';
 
-interface IEpisode {
-  cTitle: string;
-  cSquare: string;
-  cAudioSrc: string;
-}
-
-interface ISeason {
-  cEpisodes: IEpisode[];
-}
-
-interface IAudio {
-  cSquare: string;
-  cGenre: string[];
-  cAuthors: string[];
-  cSeasons: ISeason[];
-}
 
 export default function Audiobooks() {
   const [songs, setSongs] = useState<IAudio[]>([]);
-  const { playTrack } = useAudioPlayer(); // 🔥 Use global audio context
+  const { playMusic, isPlaying, selectedMusicIndex, playControl } = useMusic();
 
   useEffect(() => {
     const fetchEpisode = async () => {
@@ -39,27 +24,28 @@ export default function Audiobooks() {
     fetchEpisode();
   }, []);
 
-  return (
-    <div>
-      <h1 className="text-xl font-bold">Audiobooks</h1>
-      {songs.map((song, index) => {
-        const firstEpisode = song.cSeasons[0]?.cEpisodes[0];
 
-        return (
-          <div key={index} className="p-4 border-b flex gap-4 items-center">
-            <img src={song.cSquare} alt="Audio Cover" width={80} className="rounded-md shadow-md" />
-            <div>
-              <h2 className="text-lg font-semibold">{firstEpisode?.cTitle || "No Title"}</h2>
-              <button
-                onClick={() => playTrack({ title: firstEpisode?.cTitle || "Unknown", src: firstEpisode?.cAudioSrc || "", cover: song.cSquare })}
-                className="bg-blue-500 text-white p-2 rounded mt-2"
-              >
-                ▶ Play
-              </button>
-            </div>
-          </div>
-        );
-      })}
+  const handleClick = (e: number) => {
+    if (isPlaying && e === selectedMusicIndex) {
+      playControl();
+    }
+    else {
+      playMusic(e);
+    }
+  };
+
+  return (
+    <div className="pt-20">
+      <div className="flex justify-center items-center flex-wrap p-8 sm:p-0">
+        {songs.map((music: IAudio, index: number) => {
+          return (
+            <button key={music.cId} onClick={() => handleClick(index)}
+              className={`md:w-1/5 w-[49%] md:m-[3px] m-[1px] aspect-square ${selectedMusicIndex === index ? 'animate-pulse' : 'animate-none'}`} >
+              <HoverCard mdt={music} smi={selectedMusicIndex} ipp={isPlaying} idx={index} />
+            </button>
+          );
+        })}
+      </div>
     </div>
-  );
+  )
 }

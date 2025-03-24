@@ -5,8 +5,8 @@ import { Providers } from "./providers";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import ThemeProvider from "./context/ThemeContext";
-import AudioPlayer from "@/components/AudioPlayer";
-import { AudioPlayerProvider } from "./context/AudioPlayerContext";
+import { MusicProvider } from "./context/MusicContext";
+import MusicPlayerButton from "./audiobooks/(components)/MusicPlayerButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,14 +42,14 @@ export default function RootLayout({
       </head>
       <body className={`${bd.className} ${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>
-          <AudioPlayerProvider>
+          <MusicProvider>
             <Providers>
               <Navbar />
               {children}
-              <AudioPlayer />
+              <MusicPlayerButton />
               <Footer />
             </Providers>
-          </AudioPlayerProvider>
+          </MusicProvider>
         </ThemeProvider>
       </body>
     </html>

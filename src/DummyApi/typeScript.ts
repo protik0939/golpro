@@ -18,7 +18,7 @@ export interface TResDataUpBanner {
     cGenre: string[];
     cUserVisit: number;
     cAuthors: string[];
-    cViwersAge: string; 
+    cViwersAge: string;
 }
 
 export interface TsettingBanner {
@@ -41,9 +41,9 @@ export interface TMusicData {
     songImage: string;
     singer: string[];
     description: string;
-  }
-  
-  
+}
+
+
 export interface TMusicDataAnn {
     id: string;
     title: string;
@@ -60,4 +60,41 @@ export interface TMusicContextType {
     playMusic: (index: number) => void;
     stopMusic: () => void;
     playControl: () => void;
+}
+
+
+
+
+// Interface for an episode
+export interface IEpisode {
+    cTitle: string;          // Title of the episode
+    cSquare: string;         // Image URL for the episode
+    cAudioSrc: string;      // Audio source URL
+  }
+  
+  // Interface for a season
+  export interface ISeason {
+    cEpisodes: IEpisode[]; // Array of episodes in the season
+  }
+  
+  // Main interface for an audio content
+  export interface IAudio {
+    cId: string;            // Unique identifier
+    cTitle: string;         // Title of the audio content
+    cDescription: string;   // Description of the content
+    cSquare: string;        // Image URL for the content
+    cGenre: string[];       // Array of genre identifiers
+    cAuthors: string[];     // Array of author names
+    cSeasons: ISeason[];    // Array of seasons
+  }
+  
+  // Type for a list of audio content
+  export type IAudioList = IAudio[];
+  
+
+export interface HoverCardProps {
+    mdt: IAudio;
+    smi: null | number;
+    ipp: boolean;
+    idx: number;
 }
