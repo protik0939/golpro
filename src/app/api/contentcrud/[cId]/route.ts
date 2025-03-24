@@ -5,7 +5,7 @@ export async function GET(req: Request, { params }: { params: { cId: string } })
     try {
         await connectDB();
 
-        const { cId } = params;
+        const { cId } = await params;
 
         const contentId = await Content.findOne({ cId });
 

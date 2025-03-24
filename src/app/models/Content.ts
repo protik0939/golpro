@@ -18,6 +18,7 @@ const ContentSchema = new mongoose.Schema({
   cAuthors: [String],
   cViwersAge: String,
   cUserVisit: Number,
+  cContentType: String,
   cSeasons: { type: Array, default: [] },
 }, { timestamps: true });
 

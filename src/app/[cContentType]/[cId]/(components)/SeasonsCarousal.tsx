@@ -113,7 +113,7 @@ const SeasonsCarousal: React.FC<PropType> = (props) => {
                                                 </Link>
                                                 <div className="flex z-40 space-x-1">
 
-                                                    <Link href={`${content.cLink}`}><button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l">
+                                                    <Link href={`/${content.cNo}`}><button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l">
                                                         {getInteractIcon(contentType ?? "")}
                                                     </button></Link>
 

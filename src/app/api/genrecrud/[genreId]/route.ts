@@ -5,7 +5,7 @@ export async function GET(req: Request, { params }: { params: { genreId: string 
     try {
         await connectDB();
 
-        const { genreId } = params;
+        const { genreId } = await params;
 
         const genre = await Genre.findOne({ genreId });
 

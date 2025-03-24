@@ -5,7 +5,7 @@ export async function GET(req: Request, { params }: { params: { authorId: string
     try {
         await connectDB();
 
-        const { authorId } = params;
+        const { authorId } = await params;
 
         const author = await Authors.findOne({ authorId });
 

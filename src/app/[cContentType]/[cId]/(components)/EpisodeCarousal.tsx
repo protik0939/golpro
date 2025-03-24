@@ -20,10 +20,12 @@ type PropType = {
     options?: EmblaOptionsType
     slidesInfo?: IEpisode[]
     contentType?: string;
+    seasonNo?: number;
+    mainTitle?:string;
 }
 
 const EpisodeCarousal: React.FC<PropType> = (props) => {
-    const { title, options, contentType, slidesInfo } = props
+    const { title, options, contentType, slidesInfo, seasonNo, mainTitle } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
     const {
@@ -41,6 +43,8 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
             case 'Watch':
                 return <BiSolidMoviePlay />;
             case 'storyseries':
+                return <FaBookReader />;
+            case 'story':
                 return <FaBookReader />;
             default:
                 return null;
@@ -81,7 +85,7 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
 
                                     <div className="relative md:m-2 m-[2px] group-hover:z-30 flex flex-col items-center">
                                     <h1 className='absolute top-2 right-2 shadow-2xl bg-black/30 backdrop-blur:lg p-1 rounded-lg text-xs'>Episode {content.cNo}</h1>
-                                        <Link href={`${content.cLink}`}>
+                                        <Link href={`/${contentType}/${mainTitle}/s${(seasonNo ?? 1).toString()}/${content.cId}`}>
                                             <Image
                                                 src={content.cCard}
                                                 alt="Responsive Image"
@@ -93,7 +97,7 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
                                         </Link>
 
                                         <div className="absolute z-4 bottom-0 md:p-3 p-2 flex flex-col md:group-hover:items-start items-end md:group-hover:animate-slideIn cards-bg w-full rounded-b-xl ">
-                                            <Link className="flex flex-col md:group-hover:items-start items-end" href={`${content.cLink}`}>
+                                            <Link className="flex flex-col md:group-hover:items-start items-end" href={`/${contentType}/${mainTitle}/s${(seasonNo ?? 1).toString()}/${content.cId}`}>
                                                 <Image
                                                     src={content.cLogo}
                                                     alt={`${content.cTitle}`}
@@ -104,7 +108,7 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
                                             </Link>
                                             {/* Hidden content that will slide in and out */}
                                             <div className="hidden w-full md:group-hover:block md:group-hover:animate-slideIn animate-slideOut">
-                                                <Link href={`${content.cLink}`}>
+                                                <Link href={`/${contentType}/${mainTitle}/s${(seasonNo ?? 1).toString()}/${content.cId}`}>
                                                     <h1 className="font-bold text-[1vw]">{content.cTitle}</h1>
                                                     <p className="text-[.7vw] tooltip tooltip-primary" data-tip={content.cDescription}>
                                                         {content.cDescription.length > 30
@@ -115,7 +119,7 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
                                                 </Link>
                                                 <div className="flex z-40 space-x-1">
 
-                                                    <Link href={`${content.cLink}`}><button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l">
+                                                <Link href={`/${contentType}/${mainTitle}/s${(seasonNo ?? 1).toString()}/${content.cId}`}><button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l">
                                                         {getInteractIcon(contentType ?? "")}
                                                     </button></Link>
 

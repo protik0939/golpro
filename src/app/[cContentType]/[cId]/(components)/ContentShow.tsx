@@ -114,7 +114,77 @@ export default function ContentShow({ cId }: CIdProps) {
         }
     };
 
-    if (loading) return <h1>Loading......</h1>;
+    if (loading) {
+        return (
+            <div>
+                <div className="w-full relative -z-20">
+                    {/* Background Images */}
+                    <div className="block md:hidden w-full h-[600px] skeletonLoaderBg animate-pulse"></div>
+                    <div className="hidden md:block lg:hidden w-full h-[550px] skeletonLoaderBg animate-pulse"></div>
+                    <div className="hidden lg:block w-full h-[500px] skeletonLoaderBg animate-pulse"></div>
+                    <div className="absolute contents-bg w-full h-full bottom-0"></div>
+        
+                    {/* Info Section */}
+                    <div className="absolute bottom-0 w-full p-5">
+                        {/* Logo */}
+                        <div className="w-32 h-32 skeletonLoaderBg animate-pulse mb-4 rounded-full"></div>
+        
+                        <div className="flex flex-col lg:flex-row justify-between">
+                            <div className="w-full space-y-2">
+                                <div className="w-40 h-6 skeletonLoaderBg animate-pulse rounded-md"></div>
+                                <div className="w-60 h-4 skeletonLoaderBg animate-pulse rounded-md"></div>
+                                <div className="w-32 h-4 skeletonLoaderBg animate-pulse rounded-md"></div>
+                                <div className="w-48 h-4 skeletonLoaderBg animate-pulse rounded-md"></div>
+                            </div>
+        
+                            {/* Authors */}
+                            <div className="flex flex-col pt-2 lg:pt-0">
+                                <strong className="w-20 h-4 skeletonLoaderBg animate-pulse mb-2 rounded-md"></strong>
+                                <div className="w-48 h-4 skeletonLoaderBg animate-pulse rounded-md"></div>
+                            </div>
+        
+                            {/* Genres */}
+                            <div className="flex flex-col pt-2 lg:pt-0">
+                                <strong className="w-20 h-4 skeletonLoaderBg animate-pulse mb-2 rounded-md"></strong>
+                                <div className="w-48 h-4 skeletonLoaderBg animate-pulse rounded-md"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                {/* Season Selector */}
+                <div className="pl-5">
+                    <div className="w-64 h-14 skeletonLoaderBg animate-pulse rounded-md"></div>
+                </div>
+
+                <div className='w-full overflow-hidden'>
+                {/* Episode Carousel Placeholder */}
+
+                <div className="flex flex-wrap justify-start gap-4 p-5 w-[4000px]">
+                    <div className="w-[7%] md:w-[8%] aspect-video skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[7%] md:w-[8%] aspect-video skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[7%] md:w-[8%] aspect-video skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[7%] md:w-[8%] aspect-video skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[7%] md:w-[8%] aspect-video skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[7%] md:w-[8%] aspect-video skeletonLoaderBg animate-pulse rounded-lg"></div>
+                </div>
+        
+                {/* Season Carousel Placeholder */}
+                <div className="flex flex-wrap justify-start gap-4 p-5 w-[4000px]">
+                    <div className="w-[3.5%] md:w-[6.5%] aspect-[9/13] skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[3.5%] md:w-[6.5%] aspect-[9/13] skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[3.5%] md:w-[6.5%] aspect-[9/13] skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[3.5%] md:w-[6.5%] aspect-[9/13] skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[3.5%] md:w-[6.5%] aspect-[9/13] skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[3.5%] md:w-[6.5%] aspect-[9/13] skeletonLoaderBg animate-pulse rounded-lg"></div>
+                    <div className="w-[3.5%] md:w-[6.5%] aspect-[9/13] skeletonLoaderBg animate-pulse rounded-lg"></div>
+                </div>
+
+                </div>
+            </div>
+        );
+        
+    }
     if (!content) return <h1>No content found</h1>;
 
     return (
@@ -137,7 +207,7 @@ export default function ContentShow({ cId }: CIdProps) {
                             {/* Display Authors */}
                             <strong>Authors:</strong>
                             {aLoading ? (
-                                <p>Loading authors...</p>
+                                <span className="loading loading-infinity loading-xs" />
                             ) : (
                                 <p> {authors.map(a => a.fullName).join(', ')}</p>
                             )}
@@ -147,7 +217,7 @@ export default function ContentShow({ cId }: CIdProps) {
                             {/* Display Genres */}
                             <strong>Genres:</strong>
                             {gLoading ? (
-                                <p>Loading genres...</p>
+                                <span className="loading loading-infinity loading-xs" />
                             ) : (
                                 <p> {genres.map(g => g.genreName).join(', ')}</p>
                             )}
@@ -166,7 +236,7 @@ export default function ContentShow({ cId }: CIdProps) {
             </div>
 
             {content.cSeasons[seasons]?.cEpisodes && (
-                <EpisodeCarousal title={`Season ${seasons + 1} Episodes`} slidesInfo={content.cSeasons[seasons].cEpisodes} contentType={content.cContentType} />
+                <EpisodeCarousal title={`Season ${seasons + 1} Episodes`} slidesInfo={content.cSeasons[seasons].cEpisodes} seasonNo={seasons + 1} mainTitle={content.cId} contentType={content.cContentType} />
             )}
 
             <SeasonsCarousal title="Seasons" slidesInfo={content.cSeasons} contentType={content.cContentType} />

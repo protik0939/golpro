@@ -173,7 +173,7 @@ export default function ProfileInfo() {
         } else {
             setUsernameAvailable(null); // Reset availability check
         }
-    }, [userData.username]);
+    }, [userData.username, originalUsername]);
 
     const usernameStatus = () => {
         if (userData.username != originalUsername && userData.username.length > 3) {
@@ -192,7 +192,28 @@ export default function ProfileInfo() {
 
 
     if (status === "loading") {
-        return <div>Loading...</div>;
+        return (
+            <div className="flex sm:flex-col w-full h-auto">
+                <div className="flex justify-center items-center w-full h-full relative pt-20 pb-20">
+                    <div className="card backdrop-blur-lg w-full max-w-xl shrink-0 shadow-2xl rounded-2xl overflow-auto p-5">
+                        <div className="font-bold my-5 text-center skeletonLoaderBg animate-pulse h-6 w-40 mx-auto"></div>
+                        <div className="flex flex-col items-center">
+                            <div className="relative group w-[150px] h-[150px]">
+                                <div className="rounded-full border-4 border-blue-500 skeletonLoaderBg animate-pulse w-full h-full"></div>
+                            </div>
+                        </div>
+                        <div className="mt-10 space-y-2">
+                            {Array(6).fill(0).map((_, i) => (
+                                <div key={i} className="skeletonLoaderBg animate-pulse h-16 w-full rounded-md"></div>
+                            ))}
+                        </div>
+                        <div className="mt-6 flex justify-center">
+                            <div className="skeletonLoaderBg animate-pulse h-10 w-24 rounded-md"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (
