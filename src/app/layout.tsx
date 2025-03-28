@@ -7,6 +7,7 @@ import Footer from "@/components/Footer/Footer";
 import ThemeProvider from "./context/ThemeContext";
 import { MusicProvider } from "./context/MusicContext";
 import MusicPlayerButton from "./audiobooks/(components)/MusicPlayerButton";
+import { BookmarkProvider } from "./context/BookMarkContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,8 +24,26 @@ const geistMono = Geist_Mono({
 const bd = Baloo_Da_2({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Golpro",
-  description: "Golpro",
+  title: "Home | GolPro",
+  verification: { google: "" },
+  description: "GolPro is a platform for stories, audiobooks, podcasts, and more.",
+  keywords: "GolPro, story, ebook, audiobooks, podcasts, music, entertainment",
+  openGraph: {
+    title: "GolPro",
+    description: "GolPro is a platform for stories, audiobooks, podcasts, and more.",
+    url: "https://golpro.vercel.app/",
+    siteName: "GolPro",
+    images: [
+      {
+        url: "/protikWOutBg.webp",
+        width: 800,
+        height: 800,
+        alt: "Protik's Portfolio Image",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -44,10 +63,12 @@ export default function RootLayout({
         <ThemeProvider>
           <MusicProvider>
             <Providers>
-              <Navbar />
-              {children}
-              <MusicPlayerButton />
-              <Footer />
+              <BookmarkProvider>
+                <Navbar />
+                {children}
+                <MusicPlayerButton />
+                <Footer />
+              </BookmarkProvider>
             </Providers>
           </MusicProvider>
         </ThemeProvider>

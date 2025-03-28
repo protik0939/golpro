@@ -47,7 +47,7 @@ export const HoverCard: React.FC<HoverCardProps> = ({ mdt, smi, ipp, idx }) => {
           ))}
         </Marquee>
         <Marquee>
-          <div className="text-sm sm:text-xs">
+          <div className="text-sm sm:text-xs h-">
             <div>{mdt.cDescription}</div>
           </div>
         </Marquee>

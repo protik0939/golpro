@@ -1,8 +1,11 @@
 import React from 'react'
 import ContentShow from './(components)/ContentShow'
 
-export default async function page({ params }: { params: { cId: string } }) {
+export type paramsType = Promise<{ cId: string }>;
+
+export default async function page(props: { params: paramsType }) {
+  const { cId } = await props.params;
   return (
-    <ContentShow cId={params.cId}/>
+    <ContentShow cId={cId} />
   )
 }

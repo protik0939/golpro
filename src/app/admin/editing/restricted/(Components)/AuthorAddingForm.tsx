@@ -45,9 +45,9 @@ export default function AuthorAddingForm({ email }: Readonly<{ email: string }>)
             setFullName('');
             setDescription('');
             setImage(null);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
-            alert(error.response?.data?.message || "Something went wrong!");
+            alert("Something went wrong!");
         }
     };
 

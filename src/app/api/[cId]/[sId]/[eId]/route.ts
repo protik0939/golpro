@@ -2,7 +2,9 @@ import { connectDB } from "@/app/lib/mongodb";
 import Content from "@/app/models/Content";
 import { IEpisode, ISeason } from "@/app/models/types";
 
-export async function GET(req: Request, { params }: { params: { cId: string; sId: string; eId: string } }) {
+export type paramsType = Promise<{ cId: string; sId: string; eId: string }>;
+
+export async function GET(req: Request, { params }: { params: paramsType }) {
 
     try {
         await connectDB();

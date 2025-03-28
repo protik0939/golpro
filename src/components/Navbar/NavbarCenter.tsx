@@ -41,7 +41,7 @@ export default function NavbarCenter() {
     const [theme, setTheme] = useState<string | null>(null);
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') || 'Dark';
+        const savedTheme = localStorage.getItem('theme') ?? 'Dark';
         setTheme(savedTheme);
         document.querySelector('html')?.setAttribute('data-theme', savedTheme);
     }, []);
@@ -59,7 +59,7 @@ export default function NavbarCenter() {
         <div className={`flex mr-4 rounded-xl transition-all duration-500 ease-in-out p-2 ${isScrolled ? 'bg-base-100/10 backdrop-blur-lg' : 'bg-transparent backdrop-blur-none'}`}>
             <ul className="flex justify-between px-1 space-x-2 items-center">
                 <li><Link href={'/'}><div className={`flex space-x-1.5 justify-center items-center ${isActive('/')} hover:scale-105 rounded-lg p-2 transition duration-200 ease-in-out`}><IoHome className='text-lg' /><h1>Home</h1></div></Link></li>
-                <li><Link href={'/genre'}><div className={`flex space-x-1.5 justify-center items-center ${isActive('/genre')} hover:scale-105 rounded-lg p-2 transition duration-200 ease-in-out`}><GiDramaMasks className='text-lg' /><h1>Genre</h1></div></Link></li>
+                <li><Link href={'/genres'}><div className={`flex space-x-1.5 justify-center items-center ${isActive('/genre')} hover:scale-105 rounded-lg p-2 transition duration-200 ease-in-out`}><GiDramaMasks className='text-lg' /><h1>Genre</h1></div></Link></li>
                 <li><Link href={'/audiobooks'}><div className={`flex space-x-1.5 justify-center items-center ${isActive('/audiobooks')} hover:scale-105 rounded-lg p-2 transition duration-200 ease-in-out`}><SiAudiobookshelf className='text-lg' /><h1>Audiobook</h1></div></Link></li>
 
                 {/* More Dropdown */}
@@ -72,9 +72,9 @@ export default function NavbarCenter() {
                     {openDropdown === 'more' && (
                         <ul className="absolute left-0 mt-2 dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm">
                             <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/authors'}>Authors</Link></li>
-                            <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/terms'}>Terms of use</Link></li>
-                            <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/privacy'}>Privacy Policy</Link></li>
-                            <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/about'}>About us</Link></li>
+                            <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/termsofuse'}>Terms of use</Link></li>
+                            <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/privacypolicy'}>Privacy Policy</Link></li>
+                            <li className="hover:bg-primary/20 rounded-lg transition-all"><Link href={'/aboutus'}>About us</Link></li>
                         </ul>
                     )}
                 </li>

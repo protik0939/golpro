@@ -10,7 +10,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import './UpBanner.css'
 import Link from 'next/link'
 import Image from 'next/image'
-import { MdOutlineBookmarkAdd } from 'react-icons/md'
+import { MdBookmarkAdded, MdOutlineBookmarkAdd } from 'react-icons/md'
 import Autoplay from 'embla-carousel-autoplay'
 import toBase64 from '../ToBasesf'
 import shimmer from '../Shimmer'
@@ -18,6 +18,9 @@ import { IContent } from '@/app/models/types'
 import { PiHeadphonesFill } from 'react-icons/pi'
 import { BiSolidMoviePlay } from 'react-icons/bi'
 import { FaBookReader } from 'react-icons/fa'
+import { useBookmark } from '@/app/context/BookMarkContext'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 
 
@@ -28,6 +31,9 @@ type PropType = {
 
 const UpBanner: React.FC<PropType> = (props) => {
     const { options, slidesInfo } = props;
+    const { toggleBookmark, isBookmarked } = useBookmark();
+    const { data } = useSession();
+    const router = useRouter();
 
     const [emblaRef, emblaApi] = useEmblaCarousel(options, [
         Autoplay({ delay: 5000, stopOnInteraction: false })
@@ -57,18 +63,20 @@ const UpBanner: React.FC<PropType> = (props) => {
     }, [emblaApi]);
 
 
-        const getInteractIcon = (interactType: string) => {
-            switch (interactType) {
-                case 'Listen':
-                    return <PiHeadphonesFill />;
-                case 'Watch':
-                    return <BiSolidMoviePlay />;
-                case 'storyseries':
-                    return <FaBookReader />;
-                default:
-                    return null;
-            }
-        };
+    const getInteractIcon = (interactType: string) => {
+        switch (interactType) {
+            case 'audiostory':
+                return <PiHeadphonesFill />;
+            case 'Watch':
+                return <BiSolidMoviePlay />;
+            case 'storyseries':
+                return <FaBookReader />;
+            case 'story':
+                return <FaBookReader />;
+            default:
+                return null;
+        }
+    };
 
     return (
         <section className="embla_Upbanner">
@@ -139,10 +147,17 @@ const UpBanner: React.FC<PropType> = (props) => {
                                             <Link href={`${content.cLink}`}>
                                                 <button className="btn btn-primary mt-2">{getInteractIcon(content.cContentType)}</button>
                                             </Link>
-                                            <button className="btn btn-primary mt-2 space-x-1">
+                                            {data ?
+                                            <button onClick={() => toggleBookmark(content.cId)} className={`btn ${isBookmarked(content.cId) ? 'btn-info' : 'btn-primary'} mt-2 space-x-1`}>
+                                                <h1>{isBookmarked(content.cId) ? 'Bookmarked' : 'Bookmark'}</h1>
+                                                {isBookmarked(content.cId) ? <MdBookmarkAdded /> : <MdOutlineBookmarkAdd />}
+                                            </button>
+                                            :
+                                            <button onClick={() => router.push('/login')} className={`btn  btn-primary mt-2 space-x-1`}>
                                                 <h1>Bookmark</h1>
                                                 <MdOutlineBookmarkAdd />
                                             </button>
+                                            }
                                         </div>
                                     </div>
                                 </div>

@@ -15,10 +15,13 @@ import { PiHeadphonesFill } from 'react-icons/pi'
 import { BiSolidMoviePlay } from 'react-icons/bi'
 import { FaBookReader } from 'react-icons/fa'
 import { IoShareSocialOutline } from 'react-icons/io5'
-import { MdOutlineBookmarkAdd } from 'react-icons/md'
+import { MdBookmarkAdded, MdOutlineBookmarkAdd } from 'react-icons/md'
 import shimmer from '../Shimmer'
 import toBase64 from '../ToBasesf'
 import { IContent } from '@/app/models/types'
+import { useBookmark } from '@/app/context/BookMarkContext'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 type PropType = {
     title?: string
@@ -30,8 +33,11 @@ type PropType = {
 
 
 const EmbalaCarousel: React.FC<PropType> = (props) => {
-    const { title, options,  slidesInfo } = props
+    const { title, options, slidesInfo } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
+    const { toggleBookmark, isBookmarked } = useBookmark();
+    const { data } = useSession();
+    const router = useRouter();
 
     const {
         prevBtnDisabled,
@@ -43,11 +49,13 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
 
     const getInteractIcon = (interactType: string) => {
         switch (interactType) {
-            case 'Listen':
+            case 'audiostory':
                 return <PiHeadphonesFill />;
             case 'Watch':
                 return <BiSolidMoviePlay />;
             case 'storyseries':
+                return <FaBookReader />;
+            case 'story':
                 return <FaBookReader />;
             default:
                 return null;
@@ -127,7 +135,16 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
                                                     </button></Link>
 
                                                     <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l"><IoShareSocialOutline /></button>
-                                                    <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l"><MdOutlineBookmarkAdd /></button>
+                                                    {
+                                                        data ?
+                                                            <button onClick={() => toggleBookmark(content.cId)} className={`btn ${isBookmarked(content.cId) ? 'btn-info' : 'btn-primary'} mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l`}>
+                                                                {isBookmarked(content.cId) ? <MdBookmarkAdded /> : <MdOutlineBookmarkAdd />}
+                                                            </button>
+                                                            :
+                                                            <button onClick={() => router.push('/login')} className={`btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l`}>
+                                                                <MdOutlineBookmarkAdd />
+                                                            </button>
+                                                    }
 
                                                 </div>
                                             </div>

@@ -5,7 +5,7 @@ import loginPic from '../../../assets/icons/icon.svg';
 import '../../../(Authentication)/login/(components)/glow.css';
 import Image from 'next/image';
 import React, { useState, useRef, useEffect } from 'react';
-import Cropper from 'react-cropper';
+import Cropper, { ReactCropperElement } from 'react-cropper';
 import '/node_modules/react-cropper/node_modules/cropperjs/dist/cropper.css';
 import axios from 'axios';
 import { TbPhotoEdit } from 'react-icons/tb';
@@ -32,25 +32,26 @@ export default function ProfileInfo() {
         dateOfBirth: '',
         gender: '',
         image: '',
+        email: '',
         emailVerified: "verified",
     });
 
     const [imageUrl, setImageUrl] = useState<string>('');
-    const [croppedImage, setCroppedImage] = useState<string | null>(null);
     const [showModal, setShowModal] = useState<boolean>(false);
-    const cropperRef = useRef<any>(null);
+    const cropperRef = useRef<ReactCropperElement>(null);
 
     // Update userData when session is available
     useEffect(() => {
         if (session?.user) {
             setUserData({
-                username: session.user.username,
-                email: session.user.email,
+                username: session.user.username ?? '',
+                email: session.user.email ?? '',
                 name: session.user.name ?? '',
                 bio: session.user.bio ?? '',
                 dateOfBirth: session.user.dateOfBirth ?? '',
                 gender: session.user.gender ?? '',
                 image: session.user.image ?? '',
+                emailVerified: 'verified',
             });
         }
     }, [session]);
@@ -83,7 +84,6 @@ export default function ProfileInfo() {
                             reader.readAsDataURL(blob);
                             reader.onloadend = () => {
                                 const base64data = reader.result as string;
-                                setCroppedImage(base64data);
                                 setUserData({ ...userData, image: base64data });
                                 handleImageUpload(base64data);
                             };
@@ -132,7 +132,6 @@ export default function ProfileInfo() {
     const handleCancel = () => {
         setShowModal(false);
         setImageUrl('');
-        setCroppedImage(null);
         const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
     };

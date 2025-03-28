@@ -9,7 +9,6 @@ import { PiHeadphonesFill } from 'react-icons/pi'
 import { BiSolidMoviePlay } from 'react-icons/bi'
 import { FaBookReader } from 'react-icons/fa'
 import { IoShareSocialOutline } from 'react-icons/io5'
-import { MdOutlineBookmarkAdd } from 'react-icons/md'
 import { IEpisode } from '@/app/models/types'
 import { NextButton, PrevButton, usePrevNextButtons } from '@/components/EmblaCarouselArrowButtons'
 import toBase64 from '@/components/ToBasesf'
@@ -79,7 +78,7 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
                         (slidesInfo ?? []).map((content, index) => {
 
                             return (
-                                <div key={content.cTitle}
+                                <div key={content.cId}
                                     data-tip={`${content.cDescription}`}
                                     className={`relative group md:hover:scale-110 hover:z-30 transition-all duration-100 ease-in-out  embla__slide_Card ${getHoverClass(index)} sliderBgGroup` } >
 
@@ -124,7 +123,6 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
                                                     </button></Link>
 
                                                     <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l"><IoShareSocialOutline /></button>
-                                                    <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l"><MdOutlineBookmarkAdd /></button>
 
                                                 </div>
                                             </div>

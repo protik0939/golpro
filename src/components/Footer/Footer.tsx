@@ -5,49 +5,38 @@ import lIcon from '../../app/assets/logos/golproLogoSvg.svg'
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import EmailComponent from './EmailComponent';
 
 export default function Footer() {
 
     const currentYear = new Date().getFullYear();
 
     return (
-        <div>
+        <div className='pb-20 lg:pb-1'>
             <footer className="footer text-secondary sm:footer-horizontal bg-base-100 text-base-content p-10">
                 <nav className="@max-md:justify-center">
-                    <h6 className="footer-title">Services</h6>
-                    <Link href={''} className="link link-hover">Branding</Link>
-                    <Link href={''} className="link link-hover">Design</Link>
-                    <Link href={''} className="link link-hover">Marketing</Link>
-                    <Link href={''} className="link link-hover">Advertisement</Link>
+                    <h6 className="footer-title">Go to</h6>
+                    <Link href={'/'} className="link link-hover">Home</Link>
+                    <Link href={'/genre'} className="link link-hover">Genre</Link>
+                    <Link href={'/'} className="link link-hover">Audiobook</Link>
+                    <Link href={'/authors'} className="link link-hover">Authors</Link>
                 </nav>
 
                 <nav className="@max-md:justify-center">
-                    <h6 className="footer-title">Company</h6>
-                    <Link href={''} className="link link-hover">About us</Link>
-                    <Link href={''} className="link link-hover">Contact</Link>
-                    <Link href={''} className="link link-hover">Jobs</Link>
-                    <Link href={''} className="link link-hover">Press kit</Link>
+                    <h6 className="footer-title">Popular</h6>
+                    <Link href={'/storyseries/porichoy'} className="link link-hover">Porichoy</Link>
+                    <Link href={'/storyseries/baba'} className="link link-hover">Baba</Link>
+                    <Link href={'/audiostory/chesrami'} className="link link-hover">Chesrami</Link>
+                    <Link href={'/audiostory/irsha'} className="link link-hover">Irsha</Link>
                 </nav>
 
                 <nav className="@max-md:justify-center">
                     <h6 className="footer-title">Legal</h6>
-                    <Link href={''} className="link link-hover">Terms of use</Link>
-                    <Link href={''} className="link link-hover">Privacy policy</Link>
-                    <Link href={''} className="link link-hover">Cookie policy</Link>
+                    <Link href={'/termsofuse'} className="link link-hover">Terms of use</Link>
+                    <Link href={'/privacypolicy'} className="link link-hover">Privacy policy</Link>
+                    <Link href={'/aboutus'} className="link link-hover">About us</Link>
                 </nav>
-                <form>
-                    <h6 className="footer-title">Newsletter</h6>
-                    <fieldset className="w-full flex flex-col">
-                        <label>Enter your email address</label>
-                        <div className="join @max-md:flex @max-md:flex-col">
-                            <input
-                                type="text"
-                                placeholder="username@site.com"
-                                className="input input-bordered join-item" />
-                            <button className="btn btn-primary join-item">Subscribe</button>
-                        </div>
-                    </fieldset>
-                </form>
+                <EmailComponent />
             </footer>
             <footer className="footer sm:footer-horizontal bg-base-100 p-10 flex justify-center md:justify-between flex-col md:flex-row items-center">
                 <aside className="grid-flow-col items-center">

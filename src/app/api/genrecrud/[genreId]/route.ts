@@ -1,7 +1,9 @@
 import { connectDB } from "@/app/lib/mongodb";
 import Genre from "@/app/models/Genre";
 
-export async function GET(req: Request, { params }: { params: { genreId: string } }) {
+export type paramsType = Promise<{ genreId: string }>;
+
+export async function GET(req: Request, { params }: { params: paramsType }) {
     try {
         await connectDB();
 

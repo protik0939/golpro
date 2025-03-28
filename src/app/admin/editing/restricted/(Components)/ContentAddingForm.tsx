@@ -88,6 +88,8 @@ export default function ContentAddingForm({ email }: Readonly<{ email: string }>
     });
 
     const result = await response.json();
+    
+    alert("Content Added Successfully");
     console.log(result);
   };
 

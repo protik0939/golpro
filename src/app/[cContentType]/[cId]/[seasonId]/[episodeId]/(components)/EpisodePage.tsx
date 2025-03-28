@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react'
 
 
 export default function EpisodePage() {
-    const { cContentType, cId, seasonId, episodeId } = useParams();
+    const { cContentType, cId, seasonId, episodeId } = useParams<{cContentType: string, cId: string, seasonId: string, episodeId: string}>();
     const [episode, setEpisode] = useState<IEpisode>();
     const [episodeNo, setEpisodeNo] = useState([]);
     const [loadingEpisode, setLoadingEpisode] = useState(true);
@@ -70,7 +70,11 @@ export default function EpisodePage() {
                         {
                             cContentType == "audiostory" ?
                                 <>
-                                    <div className="w-full h-auto aspect-video skeletonLoaderBg animate-pulse rounded-md mb-2"></div>
+                                    <div className="w-full h-auto aspect-video skeletonLoaderBg animate-pulse rounded-md mb-2 pb-2.5"></div>
+                                    <div className="w-full h-4 skeletonLoaderBg animate-pulse rounded-md mb-2"></div>
+                                    <div className="w-full h-4 skeletonLoaderBg animate-pulse rounded-md mb-2"></div>
+                                    <div className="w-full h-4 skeletonLoaderBg animate-pulse rounded-md mb-2"></div>
+                                    <div className="w-2/3 h-4 skeletonLoaderBg animate-pulse rounded-md mb-2"></div>
                                     <div className="flex justify-between md:max-w-2/3 w-full pt-5">
                                         <div className="w-24 h-10 rounded-md skeletonLoaderBg animate-pulse"></div>
                                         <div className="w-24 h-10 rounded-md skeletonLoaderBg animate-pulse"></div>
@@ -135,6 +139,17 @@ export default function EpisodePage() {
             </div>
             <div className='top-2 p-5 w-full flex flex-col justify-center items-center'>
                 {
+                    episode?.cYtId !== "null" && (
+                        <iframe
+                            className=" md:max-w-2/3 w-full aspect-video md:rounded-lg pb-2.5"
+                            src={`https://www.youtube.com/embed/${episode?.cYtId}?autoplay=1&rel=0`}
+                            title="YouTube video player"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
+                            allowFullScreen
+                        ></iframe>
+                    )
+                }
+                {
                     episode?.cFullEpisode != "null" &&
                     <p className="whitespace-pre-wrap md:max-w-2/3 w-full">
                         {episode?.cFullEpisode?.replace(/\\n/g, "\n")}
@@ -147,31 +162,22 @@ export default function EpisodePage() {
                         {episode?.cNextEpisodeSpoilers?.replace(/\\n/g, "\n")}
                     </p>
                 }
-                {
-                    episode?.cYtId !== "null" && (
-                        <iframe
-                            className=" md:max-w-2/3 w-full aspect-video md:rounded-lg"
-                            src={`https://www.youtube.com/embed/${episode?.cYtId}?autoplay=1&rel=0`}
-                            title="YouTube video player"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
-                            allowFullScreen
-                        ></iframe>
-                    )
-                }
 
                 <div className='flex justify-between md:max-w-2/3 w-full pt-5'>
-                    {episodeId && parseInt(episodeId[1]) > 1 && (
-                        <Link href={`/${cContentType}/${cId}/${seasonId}/e${parseInt(episodeId[1]) - 1}`}>
+                    {episodeId && typeof episodeId === "string" && parseInt(episodeId.slice(1)) > 1 && (
+                        <Link href={`/${cContentType}/${cId}/${seasonId}/e${parseInt(episodeId.slice(1)) - 1}`}>
                             <button className="btn btn-primary">Previous</button>
                         </Link>
                     )}
 
-                    {episodeId && episodeNo?.length && parseInt(episodeId[1]) < episodeNo.length && (
-                        <Link href={`/${cContentType}/${cId}/${seasonId}/e${parseInt(episodeId[1]) + 1}`}>
+                    {episodeId && typeof episodeId === "string" && episodeNo?.length && parseInt(episodeId.slice(1)) < episodeNo.length && (
+                        <Link href={`/${cContentType}/${cId}/${seasonId}/e${parseInt(episodeId.slice(1)) + 1}`}>
                             <button className="btn btn-primary">Next</button>
                         </Link>
                     )}
                 </div>
+
+
 
             </div>
         </div>

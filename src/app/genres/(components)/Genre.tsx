@@ -5,6 +5,7 @@ import Image from "next/image";
 import toBase64 from "@/components/ToBasesf";
 import shimmer from "@/components/Shimmer";
 import Link from "next/link";
+import { IGenre } from "@/app/models/types";
 
 export default function Genre() {
   const [genres, setGenres] = useState([]);
@@ -37,8 +38,8 @@ export default function Genre() {
           ))}
 
         {!loading &&
-          genres.map((genre: any) => (
-            <Link key={genre.genreId} className="relative flex justify-center w-full md:w-1/3 lg:w-1/5 p-2 cards-bg group" href={`genres/${genre.genreName}`}>
+          genres.map((genre: IGenre) => (
+            <Link key={genre.genreId} className="relative flex justify-center w-full md:w-1/3 lg:w-1/5 p-2 cards-bg group" href={`genres/${genre.genreId}`}>
               <Image
                 src={genre.imageUrl}
                 alt={genre.genreName}

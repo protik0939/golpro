@@ -5,6 +5,7 @@ import Image from "next/image";
 import toBase64 from "@/components/ToBasesf";
 import shimmer from "@/components/Shimmer";
 import Link from "next/link";
+import { IAuthor } from "@/app/models/types";
 
 export default function AuthorsList() {
   const [authors, setAuthors] = useState([]);
@@ -31,14 +32,14 @@ export default function AuthorsList() {
         {/* Show skeletons while loading */}
         {loading &&
           Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="w-1/5 p-2 animate-pulse flex flex-col justify-center">
+            <div key={index} className=" w-full md:w-1/3 lg:w-1/5 p-2 animate-pulse flex flex-col justify-center">
               <div className="w-full h-auto aspect-square skeletonLoaderBg rounded-xl"></div>
             </div>
           ))}
 
         {!loading &&
-          authors.map((author: any) => (
-            <Link key={author._id} className="relative flex justify-center w-full md:w-1/3 lg:w-1/5 p-2 cards-bg group" href={`authors/${author.authorId}`}>
+          authors.map((author: IAuthor) => (
+            <Link key={author.authorId} className="relative flex justify-center w-full md:w-1/3 lg:w-1/5 p-2 cards-bg group" href={`authors/${author.authorId}`}>
               <Image
                 src={author.imageUrl}
                 alt="Responsive Image"

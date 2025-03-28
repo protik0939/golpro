@@ -2,6 +2,8 @@ import dynamic from 'next/dynamic';
 import { EmblaOptionsType } from 'embla-carousel';
 import { SlickSkeletonLoader, SlickSkeletonLoaderCard, SlickSkeletonLoaderLandscapes, SlickSkeletonLoaderSquare } from '@/components/SkeletonLoader/SlickSkeletonLoader';
 import UpBanner from '@/components/UpBanner/UpBanner';
+import { connectDB } from './lib/mongodb';
+import Content from './models/Content';
 
 const OPTIONS: EmblaOptionsType = { dragFree: true };
 const OPTIONSS: EmblaOptionsType = { loop: true };
@@ -27,9 +29,9 @@ const EmbalaCarousalLandscapes = dynamic(() => import('@/components/EmbalaCarous
 });
 
 async function fetchData() {
-  const res = await fetch(`http://localhost:3000/api/contentcrud/contentget`);
-  if (!res.ok) throw new Error('Failed to fetch data');
-  return res.json();
+  await connectDB();
+  const data = await Content.find({}).lean();
+  return JSON.parse(JSON.stringify(data));
 }
 
 export default async function Page() {

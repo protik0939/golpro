@@ -58,6 +58,8 @@ export interface IEpisode {
 
 
 export interface IAuthor {
+
+  authorId: string;
   imageUrl: string;
   fullName: string;
   description: string;

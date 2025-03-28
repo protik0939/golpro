@@ -1,7 +1,9 @@
 import { connectDB } from "@/app/lib/mongodb";
 import Content from "@/app/models/Content";
 
-export async function GET(req: Request, { params }: { params: { cId: string } }) {
+export type paramsType = Promise<{ cId: string }>;
+
+export async function GET(req: Request, { params }: { params: paramsType }) {
     try {
         await connectDB();
 

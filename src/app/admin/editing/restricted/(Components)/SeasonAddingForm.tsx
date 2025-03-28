@@ -135,6 +135,8 @@ export default function SeasonAddingForm({ email }: Readonly<{ email: string }>)
     });
 
     const result = await response.json();
+    
+    alert("Season added successfully!");
     console.log(result);
   };
 

@@ -9,7 +9,6 @@ import { PiHeadphonesFill } from 'react-icons/pi'
 import { BiSolidMoviePlay } from 'react-icons/bi'
 import { FaBookReader } from 'react-icons/fa'
 import { IoShareSocialOutline } from 'react-icons/io5'
-import { MdOutlineBookmarkAdd } from 'react-icons/md'
 import { ISeason } from '@/app/models/types'
 import toBase64 from '@/components/ToBasesf'
 import shimmer from '@/components/Shimmer'
@@ -36,11 +35,13 @@ const SeasonsCarousal: React.FC<PropType> = (props) => {
 
     const getInteractIcon = (interactType: string) => {
         switch (interactType) {
-            case 'Listen':
+            case 'audiostory':
                 return <PiHeadphonesFill />;
             case 'Watch':
                 return <BiSolidMoviePlay />;
             case 'storyseries':
+                return <FaBookReader />;
+            case 'story':
                 return <FaBookReader />;
             default:
                 return null;
@@ -118,7 +119,6 @@ const SeasonsCarousal: React.FC<PropType> = (props) => {
                                                     </button></Link>
 
                                                     <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l"><IoShareSocialOutline /></button>
-                                                    <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l"><MdOutlineBookmarkAdd /></button>
 
                                                 </div>
                                             </div>

@@ -143,6 +143,8 @@ export default function EpisodeAddingForm({ email }: Readonly<{ email: string }>
     });
 
     const result = await response.json();
+    
+    alert("Episode added successfully!");
     console.log(result);
   };
 

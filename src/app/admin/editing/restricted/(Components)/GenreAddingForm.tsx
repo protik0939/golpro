@@ -46,9 +46,9 @@ export default function GenreAddingForm({ email }: Readonly<{ email: string }>) 
       setGenreName('');
       setGenreDescription('');
       setGenreImage(null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      alert(error.response?.data?.message || "Something went wrong!");
+      alert("Something went wrong!");
     }
   };
 

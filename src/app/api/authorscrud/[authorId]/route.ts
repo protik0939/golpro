@@ -1,7 +1,9 @@
 import { connectDB } from "@/app/lib/mongodb";
 import Authors from "@/app/models/Authors";
 
-export async function GET(req: Request, { params }: { params: { authorId: string } }) {
+export type paramsType = Promise<{ authorId: string }>;
+
+export async function GET(req: Request, { params }: { params: paramsType }) {
     try {
         await connectDB();
 

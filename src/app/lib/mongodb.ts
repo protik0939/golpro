@@ -6,7 +6,7 @@ if (!MONGODB_URI) {
   throw new Error("Add MongoDB URI to .env file");
 }
 
-let cached = (global as any).mongoose || { conn: null, promise: null };
+const cached = global.mongoose || { conn: null, promise: null };
 
 export async function connectDB(): Promise<typeof mongoose> {
   if (cached.conn) return cached.conn;
