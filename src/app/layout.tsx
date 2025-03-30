@@ -8,6 +8,7 @@ import ThemeProvider from "./context/ThemeContext";
 import { MusicProvider } from "./context/MusicContext";
 import MusicPlayerButton from "./audiobooks/(components)/MusicPlayerButton";
 import { BookmarkProvider } from "./context/BookMarkContext";
+import { ShareProvider } from "./context/ShareContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,14 +63,16 @@ export default function RootLayout({
       <body className={`${bd.className} ${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>
           <MusicProvider>
-            <Providers>
-              <BookmarkProvider>
-                <Navbar />
-                {children}
-                <MusicPlayerButton />
-                <Footer />
-              </BookmarkProvider>
-            </Providers>
+            <ShareProvider>
+              <Providers>
+                <BookmarkProvider>
+                  <Navbar />
+                  {children}
+                  <MusicPlayerButton />
+                  <Footer />
+                </BookmarkProvider>
+              </Providers>
+            </ShareProvider>
           </MusicProvider>
         </ThemeProvider>
       </body>

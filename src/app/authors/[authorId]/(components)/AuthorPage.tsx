@@ -12,6 +12,7 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { PiHeadphonesFill } from "react-icons/pi";
 import { BiSolidMoviePlay } from "react-icons/bi";
 import { FaBookReader } from "react-icons/fa";
+import { useShare } from "@/app/context/ShareContext";
 
 interface AuthorProps {
   readonly authorId: string;
@@ -23,6 +24,7 @@ export default function AuthorPage({ authorId }: AuthorProps) {
   const [authorContent, setAuthorContent] = useState<IContent[] | null>(null);
   const [loading, setLoading] = useState(true);
   const { toggleBookmark, isBookmarked } = useBookmark();
+  const { handleShareClick } = useShare();
 
   useEffect(() => {
     if (!authorId) return;
@@ -194,7 +196,7 @@ export default function AuthorPage({ authorId }: AuthorProps) {
                               {getInteractIcon(content.cContentType)}
                             </button></Link>
 
-                            <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l"><IoShareSocialOutline /></button>
+                            <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l" onClick={(() => handleShareClick(content.cTitle, `/${content.cContentType}/${content.cId}`))}><IoShareSocialOutline /></button>
                             <button onClick={() => toggleBookmark(content.cId)} className={`btn ${isBookmarked(content.cId) ? 'btn-info' : 'btn-primary'} mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l`}>
                               {isBookmarked(content.cId) ? <MdBookmarkAdded /> : <MdOutlineBookmarkAdd />}
                             </button>

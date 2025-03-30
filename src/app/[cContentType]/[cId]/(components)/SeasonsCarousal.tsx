@@ -13,6 +13,7 @@ import { ISeason } from '@/app/models/types'
 import toBase64 from '@/components/ToBasesf'
 import shimmer from '@/components/Shimmer'
 import { NextButton, PrevButton, usePrevNextButtons } from '@/components/EmblaCarouselArrowButtons'
+import { useShare } from '@/app/context/ShareContext'
 
 type PropType = {
     title?: string,
@@ -25,6 +26,7 @@ type PropType = {
 const SeasonsCarousal: React.FC<PropType> = (props) => {
     const { title, options, slidesInfo, contentType, contentId } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
+    const {handleShareClick} = useShare()
 
     const {
         prevBtnDisabled,
@@ -121,7 +123,7 @@ const SeasonsCarousal: React.FC<PropType> = (props) => {
                                                         {getInteractIcon(contentType ?? "")}
                                                     </button></Link>
 
-                                                    <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l"><IoShareSocialOutline /></button>
+                                                    <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l" onClick={(() => handleShareClick(content.cTitle, `/${contentType}/${contentId}/${content.cId}` ))}><IoShareSocialOutline /></button>
 
                                                 </div>
                                             </div>

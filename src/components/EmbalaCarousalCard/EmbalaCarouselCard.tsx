@@ -21,6 +21,7 @@ import { IContent } from '@/app/models/types'
 import { useBookmark } from '@/app/context/BookMarkContext'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
+import { useShare } from '@/app/context/ShareContext'
 
 type PropType = {
     title?: string,
@@ -32,8 +33,9 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
     const { title, options, slidesInfo } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
     const { toggleBookmark, isBookmarked } = useBookmark();
-        const { data } = useSession();
-        const router = useRouter();
+    const { data } = useSession();
+    const router = useRouter();
+    const { handleShareClick } = useShare();
 
 
     const {
@@ -130,7 +132,7 @@ const EmbalaCarouselCard: React.FC<PropType> = (props) => {
                                                         {getInteractIcon(content.cContentType)}
                                                     </button></Link>
 
-                                                    <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l"><IoShareSocialOutline /></button>
+                                                    <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l" onClick={(() => handleShareClick(content.cTitle, `${content.cLink}` ))}><IoShareSocialOutline /></button>
                                                     {data ?
                                                     <button onClick={() => toggleBookmark(content.cId)} className={`btn ${isBookmarked(content.cId) ? 'btn-info' : 'btn-primary'} mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l`}>
                                                         {isBookmarked(content.cId) ? <MdBookmarkAdded /> : <MdOutlineBookmarkAdd />}

@@ -1,5 +1,6 @@
 'use client'
 import { useBookmark } from '@/app/context/BookMarkContext';
+import { useShare } from '@/app/context/ShareContext';
 import { IContent } from '@/app/models/types';
 import shimmer from '@/components/Shimmer';
 import toBase64 from '@/components/ToBasesf';
@@ -17,6 +18,7 @@ export default function AGenre({ genreId }: { genreId: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { toggleBookmark, isBookmarked } = useBookmark();
+  const { handleShareClick } = useShare();
 
   useEffect(() => {
     const fetchGeneredContentent = async () => {
@@ -140,7 +142,7 @@ export default function AGenre({ genreId }: { genreId: string }) {
                             {getInteractIcon(content.cContentType)}
                           </button></Link>
 
-                          <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l"><IoShareSocialOutline /></button>
+                          <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l" onClick={(() => handleShareClick(content.cTitle, `/${content.cContentType}/${content.cId}` ))}><IoShareSocialOutline /></button>
                           <button onClick={() => toggleBookmark(content.cId)} className={`btn ${isBookmarked(content.cId) ? 'btn-info' : 'btn-primary'} mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l`}>
                             {isBookmarked(content.cId) ? <MdBookmarkAdded /> : <MdOutlineBookmarkAdd />}
                           </button>

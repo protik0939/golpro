@@ -13,6 +13,7 @@ import { IEpisode } from '@/app/models/types'
 import { NextButton, PrevButton, usePrevNextButtons } from '@/components/EmblaCarouselArrowButtons'
 import toBase64 from '@/components/ToBasesf'
 import shimmer from '@/components/Shimmer'
+import { useShare } from '@/app/context/ShareContext'
 
 type PropType = {
     title?: string,
@@ -20,12 +21,13 @@ type PropType = {
     slidesInfo?: IEpisode[]
     contentType?: string;
     seasonNo?: number;
-    mainTitle?:string;
+    mainTitle?: string;
 }
 
 const EpisodeCarousal: React.FC<PropType> = (props) => {
     const { title, options, contentType, slidesInfo, seasonNo, mainTitle } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
+    const { handleShareClick } = useShare();
 
     const {
         prevBtnDisabled,
@@ -80,10 +82,10 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
                             return (
                                 <div key={content.cId}
                                     data-tip={`${content.cDescription}`}
-                                    className={`relative group md:hover:scale-110 hover:z-30 transition-all duration-100 ease-in-out  embla__slide_Card ${getHoverClass(index)} sliderBgGroup` } >
+                                    className={`relative group md:hover:scale-110 hover:z-30 transition-all duration-100 ease-in-out  embla__slide_Card ${getHoverClass(index)} sliderBgGroup`} >
 
                                     <div className="relative md:m-2 m-[2px] group-hover:z-30 flex flex-col items-center">
-                                    <h1 className='absolute top-2 right-2 shadow-2xl bg-black/30 backdrop-blur:lg p-1 rounded-lg text-xs'>Episode {content.cNo}</h1>
+                                        <h1 className='absolute top-2 right-2 shadow-2xl bg-black/30 backdrop-blur:lg p-1 rounded-lg text-xs'>Episode {content.cNo}</h1>
                                         <Link href={`/${contentType}/${mainTitle}/s${(seasonNo ?? 1).toString()}/${content.cId}`}>
                                             <Image
                                                 src={content.cCard}
@@ -120,11 +122,11 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
                                                 </Link>
                                                 <div className="flex z-40 space-x-1">
 
-                                                <Link href={`/${contentType}/${mainTitle}/s${(seasonNo ?? 1).toString()}/${content.cId}`}><button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l">
+                                                    <Link href={`/${contentType}/${mainTitle}/s${(seasonNo ?? 1).toString()}/${content.cId}`}><button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l">
                                                         {getInteractIcon(contentType ?? "")}
                                                     </button></Link>
 
-                                                    <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l"><IoShareSocialOutline /></button>
+                                                    <button className="btn btn-primary mt-2 min-h-6 h-6 w-6 min-w-6 p-1 text-l" onClick={(() => handleShareClick(content.cTitle, `/${contentType}/${mainTitle}/s${(seasonNo ?? 1).toString()}/${content.cId}`))}><IoShareSocialOutline /></button>
 
                                                 </div>
                                             </div>
