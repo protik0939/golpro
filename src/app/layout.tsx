@@ -26,7 +26,7 @@ const bd = Baloo_Da_2({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: "Home | GolPro",
-  verification: { google: "" },
+  verification: { google: "eIF-DBTlpUgbA88_sV07lhJiT8iX_luc8VqUGSfG8lc" },
   description: "GolPro is a platform for stories, audiobooks, podcasts, and more.",
   keywords: "GolPro, story, ebook, audiobooks, podcasts, music, entertainment",
   openGraph: {
