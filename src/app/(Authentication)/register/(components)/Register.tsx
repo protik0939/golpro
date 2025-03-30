@@ -217,10 +217,13 @@ export default function Register() {
     setLoading(true);
     setOtpSending(true);
     setEmailValidationError("");
-    setEmail(formData.email);
-    console.log(formData.email);
 
-    if (!isValidEmail(formData.email)) {
+    // Directly use formData.email to avoid unnecessary async state update delays
+    const emailToSend = formData.email;
+    setEmail(emailToSend);
+    console.log(emailToSend);
+
+    if (!isValidEmail(emailToSend)) {
       setEmailValidationError("Please enter a valid email.");
       setLoading(false);
       setOtpSending(false);
@@ -230,11 +233,10 @@ export default function Register() {
     setCanResend(false);
     setResendTimer(30); // Reset the timer
 
-
     const response = await fetch("/api/send-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email }),
+      body: JSON.stringify({ email: emailToSend }),
     });
 
     const data = await response.json();
@@ -250,6 +252,7 @@ export default function Register() {
       setIsOtpSent(true);
     }
   };
+
 
   // Function to verify OTP
   const verifyOtp = async () => {
