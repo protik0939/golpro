@@ -4,9 +4,9 @@ import loginPic from '../../../assets/icons/icon.svg';
 import Image from 'next/image';
 import { FcGoogle } from "react-icons/fc";
 import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 
 export default function Login() {
@@ -19,6 +19,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const router = useRouter();
   const [loggingIn, setLoggingIn] = useState(false);
+  const { data } = useSession();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,6 +43,11 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    if (data?.user) {
+      router.push("/");
+    }
+  }, [data, router]);
 
 
   return (

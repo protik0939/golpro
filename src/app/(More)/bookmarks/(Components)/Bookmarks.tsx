@@ -62,12 +62,19 @@ export default function Bookmarks() {
     }
   };
 
+
+  useEffect(() => {
+    if (!data?.user) {
+      router.push("/login");
+    }
+  }, [data, router]);
+
   if (loading) {
     return (
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4 w-full text-center">Your Bookmarked Contents</h1>
         <div className="flex flex-wrap w-full p-5">
-          {[...Array(6)].map((_, index) => (
+          {[...Array(8)].map((_, index) => (
             <div key={index} className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4 ">
               <div className="skeletonLoaderBg aspect-video animate-pulse rounded-xl transition-all duration-150 ease-in-out m-2 hover:scale-105">
                 <div className="relative flex flex-col items-center p-2">

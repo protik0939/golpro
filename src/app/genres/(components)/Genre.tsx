@@ -47,6 +47,7 @@ export default function Genre() {
                 height={270}
                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(480, 270))}`}
                 className="relative rounded-xl object-cover group-hover:border-4 group-hover:border-primary"
+                onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/cardLoad.webp')}
               />
               <h1 className="absolute bottom-5 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded">{genre.genreName}</h1>
             </Link>

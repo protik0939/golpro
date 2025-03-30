@@ -92,6 +92,7 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
                                                 height='563'
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 563))}`}
                                                 className="rounded-xl object-cover"
+                                                onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/cardLoad.webp')}
                                             />
                                         </Link>
 
@@ -103,6 +104,7 @@ const EpisodeCarousal: React.FC<PropType> = (props) => {
                                                     width="100"
                                                     height="100"
                                                     className="!w-2/3 md:group-hover:!w-1/3 object-cover"
+                                                    onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/logoLoad.webp')}
                                                 />
                                             </Link>
                                             {/* Hidden content that will slide in and out */}

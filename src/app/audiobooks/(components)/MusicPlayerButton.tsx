@@ -7,7 +7,7 @@ import MusicPlayer from '@/components/MusicPlayer';
 import { IAudio } from '@/DummyApi/typeScript';
 
 export default function MusicPlayerButton() {
-    const { selectedMusicIndex } = useMusic();
+    const { selectedContentIndex, selectedSeasonIndex, selectedMusicIndex } = useMusic();
     const [songs, setSongs] = useState<IAudio[]>([]);
 
     useEffect(() => {
@@ -24,13 +24,13 @@ export default function MusicPlayerButton() {
         fetchEpisode();
     }, []);
 
-    if (selectedMusicIndex === null) return null;
+    if (selectedMusicIndex === null || selectedContentIndex === null || selectedSeasonIndex === null) return null;
 
     return (
         <div className="fixed bottom-20 lg:bottom-4  w-full z-40 flex items-center p-2 justify-center rounded-lg pointer-events-none">
             <div className="relative w-full max-w-3xl bg-black/50 backdrop-blur-lg rounded-lg shadow-lg pointer-events-auto">
                 <div className="relative z-20">
-                    <MusicPlayer music={songs[selectedMusicIndex]} totalMusic={songs.length} />
+                    <MusicPlayer music={songs[selectedContentIndex].cSeasons[selectedSeasonIndex].cEpisodes[selectedMusicIndex]} fullApi={songs} totalMusic={songs.length} totalSeasons={songs[selectedContentIndex].cSeasons.length} totalEpisodes={songs[selectedContentIndex].cSeasons[selectedSeasonIndex].cEpisodes.length} />
                 </div>
             </div>
         </div>

@@ -17,12 +17,16 @@ interface MusicProviderProps {
 }
 
 export const MusicProvider: React.FC<MusicProviderProps> = ({ children }) => {
+    const [selectedContentIndex, setSelectedContentIndex] = useState<number | null>(null);
+    const [selectedSeasonIndex, setSelectedSeasonIndex] = useState<number | null>(null);
     const [selectedMusicIndex, setSelectedMusicIndex] = useState<number | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [isVisible, setIsVisible] = useState<boolean>(false);
 
-    const playMusic = (index: number) => {
-        setSelectedMusicIndex(index);
+    const playMusic = (cIndex: number, sIndex: number, eIndex: number) => {
+        setSelectedContentIndex(cIndex);
+        setSelectedSeasonIndex(sIndex);
+        setSelectedMusicIndex(eIndex);
         setIsPlaying(true);
         setIsVisible(true);
     };
@@ -35,12 +39,16 @@ export const MusicProvider: React.FC<MusicProviderProps> = ({ children }) => {
     const stopMusic = () => {
         setIsPlaying(false);
         setIsVisible(false);
+        setSelectedContentIndex(null);
+        setSelectedSeasonIndex(null);
         setSelectedMusicIndex(null);
     };
 
     return (
         <MusicContext.Provider
             value={{
+                selectedContentIndex,
+                selectedSeasonIndex,
                 selectedMusicIndex,
                 isPlaying,
                 isVisible,

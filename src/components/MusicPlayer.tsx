@@ -5,15 +5,18 @@ import ReactPlayer from 'react-player';
 import './MusicPlayer.css'
 import { TbPlayerPause, TbPlayerPlay, TbPlayerStop, TbPlayerTrackNext, TbPlayerTrackPrev, TbRepeat, TbRepeatOff, TbVolume, TbVolumeOff } from "react-icons/tb";
 import { useMusic } from '@/app/context/MusicContext';
-import { IAudio } from '@/DummyApi/typeScript';
+import { IAudio, IEpisode } from '@/DummyApi/typeScript';
 
 
 interface MusicPlayerProps {
-    music: IAudio;
+    music: IEpisode;
     totalMusic: number;
+    totalSeasons: number;
+    totalEpisodes: number;
+    fullApi: IAudio[];
 }
 
-const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic }) => {
+const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeasons, totalEpisodes, fullApi }) => {
     const playerRef = useRef<ReactPlayer | null>(null);
     const [muted, setMuted] = useState(false);
     const [volume, setVolume] = useState(1.0);
@@ -24,7 +27,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic }) => {
     const [playbackRate, setPlaybackRate] = useState(1);
     const [isClient, setIsClient] = useState(false); // Check if rendering on client
 
-    const { selectedMusicIndex, playMusic, isPlaying, stopMusic, playControl } = useMusic();
+    const { playMusic, isPlaying, stopMusic, playControl, selectedContentIndex, selectedSeasonIndex, selectedMusicIndex } = useMusic();
 
     useEffect(() => {
         setIsClient(true); // Set to true only on the client side
@@ -64,45 +67,64 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic }) => {
     };
 
     const handleEnded = () => {
-        let x;
-        if (selectedMusicIndex === null) {
-            return;
+        if (selectedMusicIndex !== null && selectedSeasonIndex !== null && selectedContentIndex !== null) {
+            let nextMusic = selectedContentIndex;
+            let nextSeason = selectedSeasonIndex;
+            let nextEpisode = selectedMusicIndex + 1;
+            if (nextEpisode >= totalEpisodes) {
+                nextEpisode = 0;
+                nextSeason++;
+            }
+            if (nextSeason >= totalSeasons) {
+                nextSeason = 0;
+                nextMusic++;
+            }
+            if (nextMusic >= totalMusic) {
+                nextMusic = 0;
+            }
+            playMusic(nextMusic, nextSeason, nextEpisode);
         }
-        if (selectedMusicIndex === totalMusic - 1) {
-            x = 0;
-        }
-        else {
-            x = selectedMusicIndex + 1;
-        }
-        playMusic(x);
     }
 
     const handlePrev = () => {
-        let x;
-        if (selectedMusicIndex === null) {
-            return;
-        }
-        if (selectedMusicIndex === 0) {
-            x = totalMusic - 1;
-        }
-        else {
-            x = selectedMusicIndex - 1;
-        }
-        playMusic(x);
-    }
-    const handleNext = () => {
-        let x;
-        if (selectedMusicIndex === null) {
-            return;
-        }
-        if (selectedMusicIndex === totalMusic - 1) {
-            x = 0;
-        }
-        else {
-            x = selectedMusicIndex + 1;
-        }
-        playMusic(x);
+        if (selectedMusicIndex !== null && selectedSeasonIndex !== null && selectedContentIndex !== null) {
+            let prevMusic = selectedContentIndex;
+            let prevSeason = selectedSeasonIndex;
+            let prevEpisode = selectedMusicIndex - 1;
 
+            // Check if the episode index is valid for the current season
+            if (prevEpisode < 0) {
+                prevSeason--; // Move to the previous season
+                if (prevSeason >= 0) {
+                    // Get the last episode of the previous season
+                    prevEpisode = fullApi[prevMusic].cSeasons[prevSeason].cEpisodes.length - 1;
+                } else {
+                    // If we're at the first season, move to the previous music and get the last season's last episode
+                    prevMusic--;
+                    if (prevMusic >= 0) {
+                        prevSeason = fullApi[prevMusic].cSeasons.length - 1;
+                        prevEpisode = fullApi[prevMusic].cSeasons[prevSeason].cEpisodes.length - 1;
+                    } else {
+                        // If we're at the first content, wrap around to the last content
+                        prevMusic = fullApi.length - 1;
+                        prevSeason = fullApi[prevMusic].cSeasons.length - 1;
+                        prevEpisode = fullApi[prevMusic].cSeasons[prevSeason].cEpisodes.length - 1;
+                    }
+                }
+            }
+
+            // If we're going past the first music, wrap around to the last music
+            if (prevMusic < 0) {
+                prevMusic = fullApi.length - 1;
+            }
+
+            playMusic(prevMusic, prevSeason, prevEpisode);
+        }
+    };
+
+
+    const handleNext = () => {
+        handleEnded();
     }
 
 
@@ -120,7 +142,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic }) => {
 
             <ReactPlayer
                 ref={playerRef}
-                url={music.cSeasons[0].cEpisodes[0].cAudioSrc}
+                url={music.cAudioSrc}
                 playing={isPlaying}
                 loop={loop}
                 playbackRate={playbackRate}

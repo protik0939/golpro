@@ -31,7 +31,7 @@ export default function AuthorsList() {
       <div className="flex flex-wrap justify-center items-center gap-4">
         {/* Show skeletons while loading */}
         {loading &&
-          Array.from({ length: 6 }).map((_, index) => (
+          Array.from({ length: 12 }).map((_, index) => (
             <div key={index} className=" w-full md:w-1/3 lg:w-1/5 p-2 animate-pulse flex flex-col justify-center">
               <div className="w-full h-auto aspect-square skeletonLoaderBg rounded-xl"></div>
             </div>

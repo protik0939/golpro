@@ -4,7 +4,7 @@ import loginPic from '../../../assets/icons/icon.svg';
 import Image from 'next/image';
 import { FcGoogle } from "react-icons/fc";
 import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { LiaBirthdayCakeSolid } from 'react-icons/lia';
@@ -37,7 +37,7 @@ export default function Register() {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const cropperRef = useRef<ReactCropperElement>(null);
-  
+
   const [uploadingImageToServer, setUploadingImageToServer] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -47,6 +47,7 @@ export default function Register() {
   const [usernameAvailable, setUsernameAvailable] = useState<null | boolean>(null);
   const [checkingUsername, setCheckingUsername] = useState<boolean>(false);
   const [registeringUser, setRegisteringUser] = useState<boolean>(false);
+  const { data } = useSession();
 
   // for eemail verification
   const [email, setEmail] = useState("");
@@ -303,11 +304,11 @@ export default function Register() {
     if (otp.length !== 6) {
       return <h1 className='text-xs text-gray-500'>Enter 6 digits code</h1>;
     }
-  
+
     if (otpVerifying) {
       return <h1>Verifying <span className="loading loading-infinity loading-xs" /></h1>;
     }
-  
+
     return (
       <button
         type='button'
@@ -319,6 +320,13 @@ export default function Register() {
       </button>
     );
   };
+
+
+  useEffect(() => {
+    if (data?.user) {
+      router.push("/");
+    }
+  }, [data, router]);
 
 
   return (

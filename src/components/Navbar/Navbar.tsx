@@ -66,7 +66,7 @@ export default function Navbar() {
                                                 Profile
                                             </Link>
                                         </li>
-                                        <li className='bg-primary/0 hover:bg-primary/20 shadow-none hover:shadow-sm hover:shadow-secondary transition-all duration-200 ease-in-out rounded-lg'><Link href={''}>Settings</Link></li>
+                                        <li className='bg-primary/0 hover:bg-primary/20 shadow-none hover:shadow-sm hover:shadow-secondary transition-all duration-200 ease-in-out rounded-lg'><Link href={'/bookmarks'}>Bookmarks</Link></li>
                                         <li className='bg-primary/0 hover:bg-primary/20 shadow-none hover:shadow-sm hover:shadow-secondary transition-all duration-200 ease-in-out rounded-lg'>
                                             <button onClick={() => signOut()}>Sign Out</button>
                                         </li>

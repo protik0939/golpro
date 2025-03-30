@@ -1,3 +1,5 @@
+import { IAuthor } from "@/app/models/types";
+
 export interface TResDataUpBanner {
     cId: string;
     cTitle: string;
@@ -54,10 +56,12 @@ export interface TMusicDataAnn {
 }
 
 export interface TMusicContextType {
+    selectedContentIndex: number | null;
+    selectedSeasonIndex: number | null;
     selectedMusicIndex: number | null;
     isPlaying: boolean;
     isVisible: boolean;
-    playMusic: (index: number) => void;
+    playMusic: (cIndex: number, sIndex: number, eIndex: number) => void;
     stopMusic: () => void;
     playControl: () => void;
 }
@@ -67,18 +71,29 @@ export interface TMusicContextType {
 
 // Interface for an episode
 export interface IEpisode {
+    cDescription: string;
+    cCard: string;
+    cLogo: string;
+    cNo: string;
+    cId: string;
     cTitle: string;          // Title of the episode
     cSquare: string;         // Image URL for the episode
     cAudioSrc: string;      // Audio source URL
-  }
-  
-  // Interface for a season
-  export interface ISeason {
+}
+
+// Interface for a season
+export interface ISeason {
+    cDescription: string;
+    cLandscape: string;
+    cId: string;
+    cNo: string;
+    cTitle:string;
     cEpisodes: IEpisode[]; // Array of episodes in the season
-  }
-  
-  // Main interface for an audio content
-  export interface IAudio {
+}
+
+// Main interface for an audio content
+export interface IAudio {
+    cAudioSrc: string;      // Audio source URL
     cId: string;            // Unique identifier
     cTitle: string;         // Title of the audio content
     cDescription: string;   // Description of the content
@@ -86,15 +101,20 @@ export interface IEpisode {
     cGenre: string[];       // Array of genre identifiers
     cAuthors: string[];     // Array of author names
     cSeasons: ISeason[];    // Array of seasons
-  }
-  
-  // Type for a list of audio content
-  export type IAudioList = IAudio[];
-  
+}
+
+// Type for a list of audio content
+export type IAudioList = IAudio[];
+
 
 export interface HoverCardProps {
-    mdt: IAudio;
+    mdt: IEpisode;
+    sci: null | number;
+    ssi: null | number;
     smi: null | number;
     ipp: boolean;
-    idx: number;
+    cAuthor: IAuthor[];
+    cidx: number;
+    sidx: number;
+    midx: number;
 }

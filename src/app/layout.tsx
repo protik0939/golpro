@@ -35,10 +35,10 @@ export const metadata: Metadata = {
     siteName: "GolPro",
     images: [
       {
-        url: "/protikWOutBg.webp",
-        width: 800,
-        height: 800,
-        alt: "Protik's Portfolio Image",
+        url: "/src/app/assets/golproseo.webp",
+        width: 1200,
+        height: 627,
+        alt: "GolPro",
       },
     ],
     locale: "en_US",

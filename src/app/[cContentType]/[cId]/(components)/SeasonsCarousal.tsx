@@ -19,10 +19,11 @@ type PropType = {
     options?: EmblaOptionsType
     slidesInfo?: ISeason[]
     contentType?: string;
+    contentId?: string;
 }
 
 const SeasonsCarousal: React.FC<PropType> = (props) => {
-    const { title, options, slidesInfo, contentType } = props
+    const { title, options, slidesInfo, contentType, contentId } = props
     const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
     const {
@@ -80,7 +81,7 @@ const SeasonsCarousal: React.FC<PropType> = (props) => {
                                     className={`relative group md:hover:scale-110 hover:z-30 transition-all duration-100 ease-in-out ${getHoverClass(index)} embla__slide sliderBgGroup`} >
                                     <div className="relative md:m-2 m-[2px] group-hover:z-30 flex flex-col items-center">
                                         <h1 className='absolute top-2 right-2 shadow-2xl bg-black/30 backdrop-blur:lg p-1 rounded-lg text-sm'>Season {content.cNo}</h1>
-                                        <Link href={`${content.cLink}`}>
+                                        <Link href={`/${contentType}/${contentId}/${content.cId}`}>
                                             <Image
                                                 src={content.cPortrait}
                                                 alt="Responsive Image"
@@ -88,22 +89,24 @@ const SeasonsCarousal: React.FC<PropType> = (props) => {
                                                 height='1000'
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 674))}`}
                                                 className="rounded-xl object-cover"
+                                                onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/portraitLoad.webp')}
                                             />
                                         </Link>
 
                                         <div className="absolute z-4 bottom-0 p-2 md:p-3 flex flex-col md:group-hover:items-start items-center md:group-hover:animate-slideIn cards-bg w-full rounded-b-xl">
-                                            <Link className="flex flex-col md:group-hover:items-start items-center" href={`${content.cLink}`}>
+                                            <Link className="flex flex-col md:group-hover:items-start items-center" href={`/${contentType}/${contentId}/${content.cId}`}>
                                                 <Image
                                                     src={content.cLogo}
                                                     alt={`${content.cTitle}`}
                                                     width="1000"
                                                     height="674"
                                                     className="!w-2/3 object-cover"
+                                                    onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/logoLoad.webp')}
                                                 />
                                             </Link>
                                             {/* Hidden content that will slide in and out */}
                                             <div className="hidden w-full md:group-hover:block md:group-hover:animate-slideIn animate-slideOut">
-                                                <Link href={`${content.cLink}`}>
+                                                <Link href={`/${contentType}/${contentId}/${content.cId}`}>
                                                     <h1 className="font-bold text-[1vw]">S{content.cNo} | {content.cTitle}</h1>
                                                     <p className={`text-[.7vw] tooltip tooltip-primary`} data-tip={content.cDescription}>
                                                         {content.cDescription.length > 50
@@ -114,7 +117,7 @@ const SeasonsCarousal: React.FC<PropType> = (props) => {
                                                 </Link>
                                                 <div className="flex z-40 space-x-1">
 
-                                                    <Link href={`/${content.cNo}`}><button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l">
+                                                    <Link href={`/${contentType}/${contentId}/${content.cId}`}><button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l">
                                                         {getInteractIcon(contentType ?? "")}
                                                     </button></Link>
 
