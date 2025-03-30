@@ -244,6 +244,7 @@ export default function Register() {
     if (response.ok) {
       setIsOtpSent(true);
     } else {
+      setCanResend(true);
       setOtpSendError(data.error || "Failed to send OTP");
       console.log(otpSendError);
       setIsOtpSent(true);

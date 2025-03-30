@@ -5,7 +5,7 @@ import Otp from "@/app/models/Otp";
 import { connectDB } from "@/app/lib/mongodb";
 
 export async function POST(req: Request) {
-    await connectDB(); // Ensure DB connection
+    await connectDB();
 
     const { email } = await req.json();
 
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         secure: true,
         auth: {
             user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
+            pass: process.env.EMAIL_PASS,
         }
     });
 
