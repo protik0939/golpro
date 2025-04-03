@@ -101,6 +101,7 @@ const EmbalaCarousalTopTen: React.FC<PropType> = (props) => {
                                                 height='1000'
                                                 className="rounded-xl object-cover"
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 1000))}`}
+                                                onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/squareLoad.webp')}
                                             />
                                         </Link>
 

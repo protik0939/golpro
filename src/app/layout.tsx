@@ -9,6 +9,7 @@ import { MusicProvider } from "./context/MusicContext";
 import MusicPlayerButton from "./audiobooks/(components)/MusicPlayerButton";
 import { BookmarkProvider } from "./context/BookMarkContext";
 import { ShareProvider } from "./context/ShareContext";
+import ServiceWorker from "@/components/ServiceWorker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
-  
+
 };
 
 export default function RootLayout({
@@ -60,8 +61,10 @@ export default function RootLayout({
           type="image/<generated>"
           sizes="<generated>"
         />
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${bd.className} ${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ServiceWorker />
         <ThemeProvider>
           <MusicProvider>
             <ShareProvider>

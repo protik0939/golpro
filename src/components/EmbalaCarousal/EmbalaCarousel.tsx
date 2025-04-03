@@ -106,6 +106,7 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
                                                 height='1000'
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1000, 674))}`}
                                                 className="rounded-xl object-cover"
+                                                onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/portraitLoad.webp')}
                                             />
                                         </Link>
 
@@ -117,6 +118,7 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
                                                     width="1000"
                                                     height="674"
                                                     className="!w-2/3 object-cover"
+                                                    onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/logoLoad.webp')}
                                                 />
                                             </Link>
                                             {/* Hidden content that will slide in and out */}
@@ -136,7 +138,7 @@ const EmbalaCarousel: React.FC<PropType> = (props) => {
                                                         {getInteractIcon(content.cContentType)}
                                                     </button></Link>
 
-                                                    <button  className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l" onClick={(() => handleShareClick(content.cTitle, `${content.cLink}` ))}><IoShareSocialOutline /></button>
+                                                    <button className="btn btn-primary mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l" onClick={(() => handleShareClick(content.cTitle, `${content.cLink}`))}><IoShareSocialOutline /></button>
                                                     {
                                                         data ?
                                                             <button onClick={() => toggleBookmark(content.cId)} className={`btn ${isBookmarked(content.cId) ? 'btn-info' : 'btn-primary'} mt-2 min-h-8 h-8 w-8 min-w-8 p-1 text-l`}>

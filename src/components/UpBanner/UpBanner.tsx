@@ -102,6 +102,7 @@ const UpBanner: React.FC<PropType> = (props) => {
                                                 height={1625}
                                                 className="block md:hidden object-cover"
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1094, 1625))}`}
+                                                onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/portraitLoad.webp')}
                                             />
 
                                             <Image
@@ -112,6 +113,7 @@ const UpBanner: React.FC<PropType> = (props) => {
                                                 height={1137}
                                                 className="hidden md:block lg:hidden object-cover"
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(2375, 1137))}`}
+                                                onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/landscapeLoad.webp')}
                                             />
 
                                             <Image
@@ -122,6 +124,7 @@ const UpBanner: React.FC<PropType> = (props) => {
                                                 height={825}
                                                 className="hidden lg:block object-cover"
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(2375, 825))}`}
+                                                onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/cardLoad.webp')}
                                             />
 
                                         </div>
@@ -136,6 +139,7 @@ const UpBanner: React.FC<PropType> = (props) => {
                                                 width='200'
                                                 height='200'
                                                 className={`!w-1/3 lg:!w-1/4 object-cover ${logoClass}`} // Add the animation class here
+                                                onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/logoLoad.webp')}
                                                 loading='eager'
                                             />
                                             <h1 className="text-secondary md:text-right text-center text-base mt-4 font-bold">
