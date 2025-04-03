@@ -20,6 +20,7 @@ const ContentSchema = new mongoose.Schema({
   cUserVisit: Number,
   cContentType: String,
   cSeasons: { type: Array, default: [] },
+  cHomePage: [String],
 }, { timestamps: true });
 
 export default mongoose.models.Content || mongoose.model('Content', ContentSchema);

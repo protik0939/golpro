@@ -18,6 +18,8 @@ export interface IContent {
   cViwersAge: string;
   cUserVisit: number;
   cSeasons: ISeason[];
+  cHomePage: string[];
+  createdAt: string;
 }
 
 

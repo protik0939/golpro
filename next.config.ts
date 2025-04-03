@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 
+
 const nextConfig: NextConfig = {
   images: {
     domains: ['i.ibb.co', 'ibb.co', 'i.ibb.co.com'],
@@ -21,3 +22,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
