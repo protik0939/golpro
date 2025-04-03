@@ -8,6 +8,8 @@ import React, { useEffect, useState } from 'react';
 import SeasonsCarousal from './SeasonsCarousal';
 import EpisodeCarousal from './EpisodeCarousal';
 import AuthorsCarousal from './AuthorsCarousal';
+import { IoShareSocialOutline } from 'react-icons/io5';
+import { useShare } from '@/app/context/ShareContext';
 
 interface CIdProps {
     readonly cId: string;
@@ -23,6 +25,7 @@ export default function ContentShow({ cId }: CIdProps) {
     const [totalSeasons, setTotalSeasons] = useState(0);
     const [totalEpisodes, setTotalEpisodes] = useState(0);
     const [seasons, setSeasons] = useState<number>(0);
+    const { handleShareClick } = useShare();
 
     const [bgImages, setBgImages] = useState({
         banner: "",
@@ -206,8 +209,8 @@ export default function ContentShow({ cId }: CIdProps) {
         <div>
             <div className='w-full relative -z-20 '>
                 <Image unoptimized src={bgImages.portrait} alt="Responsive Image" width={1094} height={1625} className="block md:hidden object-cover" placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1094, 1625))} onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/portraitLoad.webp')}`} />
-                <Image unoptimized src={bgImages.landscape} alt="Responsive Image" width={2375} height={1137} className="hidden md:block lg:hidden object-cover" placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(2375, 1137))}`}  onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/landscapeLoad.webp')}/>
-                <Image unoptimized src={bgImages.banner} alt="Responsive Image" width={2375} height={825} className="hidden lg:block object-cover" placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(2375, 825))}`}  onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/bannerLoad.webp')}/>
+                <Image unoptimized src={bgImages.landscape} alt="Responsive Image" width={2375} height={1137} className="hidden md:block lg:hidden object-cover" placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(2375, 1137))}`} onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/landscapeLoad.webp')} />
+                <Image unoptimized src={bgImages.banner} alt="Responsive Image" width={2375} height={825} className="hidden lg:block object-cover" placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(2375, 825))}`} onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/bannerLoad.webp')} />
                 <div className='absolute contents-bg w-full h-full bottom-0' />
                 <div className='absolute bottom-0 w-full p-5'>
                     <Image unoptimized src={bgImages.logo} alt="Logo Image" width='200' height='200' className={`!w-1/3 lg:!w-1/8 object-cover`} loading='eager' />
@@ -232,7 +235,7 @@ export default function ContentShow({ cId }: CIdProps) {
                                     {authors.slice(0, 3).map((author: IAuthor) => (
                                         <div key={author.authorId} className="avatar">
                                             <div className="w-12">
-                                                <Image src={author.imageUrl} alt={author.fullName} height={40} width={40} onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/squareLoad.webp')}/>
+                                                <Image src={author.imageUrl} alt={author.fullName} height={40} width={40} onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/squareLoad.webp')} />
                                             </div>
                                         </div>
                                     ))}
@@ -260,7 +263,7 @@ export default function ContentShow({ cId }: CIdProps) {
                     </div>
                 </div>
             </div>
-
+            <button className="btn btn-primary px-3 text-l ml-5 mb-2 cursor-pointer" onClick={(() => handleShareClick(content.cTitle, `/${content.cContentType}/${content.cId}`))}><span>Share </span><IoShareSocialOutline /></button>
             <div className='pl-5'>
                 <select defaultValue="Select Season" className="select select-ghost border-[1px] border-secondary" onChange={handleSeasonChange}>
                     <option disabled>Select Season</option>
