@@ -21,6 +21,8 @@ import { FaBookReader } from 'react-icons/fa'
 import { useBookmark } from '@/app/context/BookMarkContext'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useShare } from '@/app/context/ShareContext'
+import { IoShareSocialOutline } from 'react-icons/io5'
 
 
 
@@ -34,6 +36,7 @@ const UpBanner: React.FC<PropType> = (props) => {
     const { toggleBookmark, isBookmarked } = useBookmark();
     const { data } = useSession();
     const router = useRouter();
+        const { handleShareClick } = useShare();
 
     const [emblaRef, emblaApi] = useEmblaCarousel(options, [
         Autoplay({ delay: 5000, stopOnInteraction: false })
@@ -149,15 +152,14 @@ const UpBanner: React.FC<PropType> = (props) => {
                                             </Link>
                                             {data ?
                                             <button onClick={() => toggleBookmark(content.cId)} className={`btn ${isBookmarked(content.cId) ? 'btn-info' : 'btn-primary'} mt-2 space-x-1`}>
-                                                <h1>{isBookmarked(content.cId) ? 'Bookmarked' : 'Bookmark'}</h1>
                                                 {isBookmarked(content.cId) ? <MdBookmarkAdded /> : <MdOutlineBookmarkAdd />}
                                             </button>
                                             :
                                             <button onClick={() => router.push('/login')} className={`btn  btn-primary mt-2 space-x-1`}>
-                                                <h1>Bookmark</h1>
                                                 <MdOutlineBookmarkAdd />
                                             </button>
                                             }
+                                            <button  className="btn btn-primary mt-2" onClick={(() => handleShareClick(content.cTitle, `/${content.cContentType}/${content.cId}`))}><IoShareSocialOutline /></button>
                                         </div>
                                     </div>
                                 </div>

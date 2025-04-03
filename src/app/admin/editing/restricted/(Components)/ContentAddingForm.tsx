@@ -40,6 +40,7 @@ export default function ContentAddingForm({ email }: Readonly<{ email: string }>
     cViwersAge: "",
     cUserVisit: 0,
     cSeasons: [] as object[],
+    cHomePage: [] as string[],
   });
 
   const [genres, setGenres] = useState<Genre[]>([]);

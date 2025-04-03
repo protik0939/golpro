@@ -11,6 +11,9 @@ export async function GET(req: Request, { params }: { params: paramsType }) {
         const { cId, sId, eId } = await params;
         const series = await Content.findOne({ cId });
 
+        series.cUserVisit = (series.cUserVisit || 0) + 1;
+        await series.save();
+
         if (!series) {
             return new Response(JSON.stringify({ message: `${cId} Story series not found` }), { status: 404 });
         }

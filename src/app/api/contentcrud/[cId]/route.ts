@@ -15,6 +15,9 @@ export async function GET(req: Request, { params }: { params: paramsType }) {
             return new Response(JSON.stringify({ message: "Author not found" }), { status: 404 });
         }
 
+        contentId.cUserVisit = (contentId.cUserVisit || 0) + 1;
+        await contentId.save();
+
         return new Response(JSON.stringify(contentId), {
             status: 200,
             headers: { "Content-Type": "application/json" },
