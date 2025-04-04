@@ -13,9 +13,16 @@ export async function POST(req: Request) {
             return new Response(JSON.stringify({ message: "Email is required" }), { status: 400 });
         }
 
-        if (!req.headers.get("referer")?.startsWith("http://localhost:3000")) {
+        const allowedOrigins = [
+            "http://localhost:3000",  // For local development
+            "https://golpro.vercel.app"  // For Vercel production
+        ];
+        
+        const referer = req.headers.get("referer");
+        if (!referer || !allowedOrigins.some((origin) => referer.startsWith(origin))) {
             return new Response(JSON.stringify({ message: "Unauthorized: Invalid Origin" }), { status: 403 });
         }
+        
 
         await connectDB();
 

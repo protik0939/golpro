@@ -192,7 +192,7 @@ export default function ProfileInfo() {
 
     if (status === "loading") {
         return (
-            <div className="flex sm:flex-col w-full h-auto">
+            <div className="flex flex-col w-full h-auto">
                 <div className="flex justify-center items-center w-full h-full relative pt-20 pb-20">
                     <div className="card backdrop-blur-lg w-full max-w-xl shrink-0 shadow-2xl rounded-2xl overflow-auto p-5">
                         <div className="font-bold my-5 text-center skeletonLoaderBg animate-pulse h-6 w-40 mx-auto"></div>

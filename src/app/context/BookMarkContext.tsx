@@ -7,18 +7,22 @@ interface BookmarkContextType {
   bookmarks: string[];
   toggleBookmark: (contentId: string) => void;
   isBookmarked: (contentId: string) => boolean;
+  isLoading: boolean;
 }
 
 const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);
 
 export const BookmarkProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [bookmarks, setBookmarks] = useState<string[]>([]);
-  const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(true);  // Adding loading state
+  const { data: session, status } = useSession();
 
   useEffect(() => {
+    // Fetch bookmarks when session is available
     const fetchBookmarks = async () => {
       if (!session) {
         console.log("User not logged in");
+        setIsLoading(false);
         return;
       }
 
@@ -37,13 +41,22 @@ export const BookmarkProvider: React.FC<{ children: ReactNode }> = ({ children }
         }
       } catch (error) {
         console.error("Error:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchBookmarks();
-  }, [session]);
+    if (status === "authenticated") {
+      fetchBookmarks();
+    }
+  }, [session, status]);  // Ensure it re-fetches when session or status changes
 
   const toggleBookmark = async (contentId: string) => {
+    if (!session) {
+      console.log("User not logged in");
+      return;
+    }
+
     try {
       const response = await fetch('/api/bookmark/bookmarkpost', {
         method: 'POST',
@@ -67,7 +80,7 @@ export const BookmarkProvider: React.FC<{ children: ReactNode }> = ({ children }
   const isBookmarked = (contentId: string) => bookmarks.includes(contentId);
 
   return (
-    <BookmarkContext.Provider value={{ bookmarks, toggleBookmark, isBookmarked }}>
+    <BookmarkContext.Provider value={{ bookmarks, toggleBookmark, isBookmarked, isLoading }}>
       {children}
     </BookmarkContext.Provider>
   );
