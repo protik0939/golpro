@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "GolPro",
     images: [
       {
-        url: "/src/app/assets/golproseo.webp",
+        url: "https://i.ibb.co.com/vC01wvt2/golproseo.webp",
         width: 1200,
         height: 627,
         alt: "GolPro",

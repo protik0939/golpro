@@ -4,8 +4,8 @@ import favICon from '../../app/assets/icons/icon.svg'
 import lIcon from '../../app/assets/logos/golproLogoSvg.svg'
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
 import EmailComponent from './EmailComponent';
+import InstallPwaButton from './InstallPwaButton';
 
 export default function Footer() {
 
@@ -58,19 +58,17 @@ export default function Footer() {
                 </aside>
                 <nav className='md:pr-5 text-secondary'>
                     <h6 className="footer-title text-center w-full md:w-auto">Social</h6>
-                    <div className="grid grid-flow-col gap-4">
-                        <Link href={''}>
+                    <div className="grid grid-flow-col items-center gap-4">
+                        <Link target="_blank" href={'https://www.facebook.com/golprobd'}>
                             <FaFacebook className="text-4xl" />
                         </Link>
-                        <Link href={''}>
+                        <Link target="_blank" href={'https://www.youtube.com/@golpro6887'}>
                             <FaYoutube className="text-4xl" />
                         </Link>
-                        <Link href={''}>
+                        <Link target="_blank" href={'https://www.instagram.com/golprobd/'}>
                             <FaInstagram className="text-4xl" />
                         </Link>
-                        <Link href={''}>
-                            <FaXTwitter className="text-4xl" />
-                        </Link>
+                        <InstallPwaButton />
                     </div>
                 </nav>
             </footer>
