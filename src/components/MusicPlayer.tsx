@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import './MusicPlayer.css'
 import { TbPlayerPause, TbPlayerPlay, TbPlayerStop, TbPlayerTrackNext, TbPlayerTrackPrev, TbRepeat, TbRepeatOff, TbVolume, TbVolumeOff } from "react-icons/tb";
+import { RiForward5Line, RiReplay5Line } from "react-icons/ri";
 import { useMusic } from '@/app/context/MusicContext';
 import { IAudio, IEpisode } from '@/DummyApi/typeScript';
 
@@ -26,6 +27,14 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
     const [duration, setDuration] = useState(0);
     const [playbackRate, setPlaybackRate] = useState(1);
     const [isClient, setIsClient] = useState(false); // Check if rendering on client
+
+    const playbackRates = [0.5, 1, 1.5, 2];
+
+    const handleClickPlaybackSpeed = () => {
+        const currentIndex = playbackRates.indexOf(playbackRate);
+        const nextIndex = (currentIndex + 1) % playbackRates.length;
+        setPlaybackRate(playbackRates[nextIndex]);
+    };
 
     const { playMusic, isPlaying, stopMusic, playControl, selectedContentIndex, selectedSeasonIndex, selectedMusicIndex } = useMusic();
 
@@ -127,6 +136,17 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
         handleEnded();
     }
 
+    const handleSeekBackward = () => {
+        const newTime = Math.max(0, playedSeconds - 5);
+        playerRef.current?.seekTo(newTime, 'seconds');
+    };
+
+    const handleSeekForward = () => {
+        const newTime = Math.min(duration, playedSeconds + 5);
+        playerRef.current?.seekTo(newTime, 'seconds');
+    };
+
+
 
     const playedSeconds = duration * played;
     const remainingTime = duration - playedSeconds;
@@ -173,13 +193,13 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
                     />
                 </div>
                 <div className='flex justify-between'>
-                    <div className='w-20 h-20 hidden sm:block relative'>
+                    <div className='w-20 h-20 relative aspect-square'>
                         <Image
                             src={music.cSquare}
                             alt={music.cTitle}
                             width={600}
                             height={600}
-                            className="w-20 h-20 rounded-lg shadow-md"
+                            className="w-20 h-20 rounded-lg shadow-md aspect-square"
                         />
                         <div className="sm:text-md text-xs w-full text-center font-bold absolute bottom-0 ">{music.cTitle}</div>
                     </div>
@@ -253,22 +273,24 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
                                     </button>
 
                                 </div>
-                                <span className='text-xs'>{formatTime(duration)}</span>
+                                <div className="flex items-center space-x-4">
+                                    <button onClick={handleSeekBackward} className="text-2xl rounded-full cursor-pointer"><RiReplay5Line /></button>
+                                    <span className='text-xs'>{formatTime(duration)}</span>
+                                    <button onClick={handleSeekForward} className="text-2xl rounded-full cursor-pointer"><RiForward5Line /></button>
+                                </div>
+
                             </div>
 
 
 
                             <div className='flex flex-col justify-between items-end'>
-                                <select
-                                    className="select bg-black/50 select-xs"
-                                    onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-                                    value={playbackRate}
+                                <button
+                                    onClick={handleClickPlaybackSpeed}
+                                    className="w-8 h-8 rounded-full bg-black/50 text-white text-xs flex items-center justify-center border-[2px] border-primary transition cursor-pointer"
                                 >
-                                    <option value="0.5">0.5x</option>
-                                    <option value="1">1x</option>
-                                    <option value="1.5">1.5x</option>
-                                    <option value="2">2x</option>
-                                </select>
+                                    {playbackRate}x
+                                </button>
+
                                 <span className='text-xs'>-{formatTime(remainingTime)}</span>
 
                             </div>

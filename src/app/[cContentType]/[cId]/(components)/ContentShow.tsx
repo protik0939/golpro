@@ -203,7 +203,17 @@ export default function ContentShow({ cId }: CIdProps) {
         );
 
     }
-    if (!content) return <h1>No content found</h1>;
+    if (!content) return (
+        <div className='w-full h-auto flex justify-center items-center'>
+            <Image
+                src="../../../assets/lostsrc.svg"
+                width={1000}
+                height={1000}
+                className='w-full h-auto'
+                alt="Not Found"
+            />
+        </div>
+    );
 
     return (
         <div>
