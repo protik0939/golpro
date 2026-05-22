@@ -90,7 +90,12 @@ export const buildBirthdayMailHtml = ({
                           <tr>
                             <td style="vertical-align:top;">
                               <div style="display:inline-block;font-family:Arial,sans-serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#c7d2fe;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:rgba(15,23,42,0.55);border:1px solid rgba(255,255,255,0.14);">${typeLabel}</div>
-                              <div style="font-family:Arial,sans-serif;font-size:26px;line-height:1.12;font-weight:800;color:#ffffff;margin-bottom:10px;max-width:360px;">${title}</div>
+                              <div style="display:flex;align-items:center;">
+                              <div style="font-family:Arial,sans-serif;font-size:26px;line-height:1.12;font-weight:800;color:#ffffff;margin-bottom:10px;max-width:360px;">${title}</div> 
+                                <span style="display:inline-block;padding:8px;">
+                                    <img src="${escapeHtml(contentLogo)}" alt="${title} logo" style="display:block;width:20px;height:20px;background:#FFFFFF;border-radius:4px;border:1px solid rgb(255, 255, 255);margin-bottom:10px;" />
+                                </span>
+                              </div>
                               <div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.65;color:#dbeafe;max-width:360px;">${description}</div>
                             </td>
                           </tr>
@@ -102,9 +107,6 @@ export const buildBirthdayMailHtml = ({
                       <td style="position:relative;">
                         <a href="${escapeHtml(href)}" style="display:block;text-decoration:none;position:relative;">
                           <img src="${escapeHtml(heroImage)}" alt="${title} preview" style="display:block;width:100%;max-width:100%;height:auto;object-fit:cover;" />
-                          <span style="position:absolute;right:16px;bottom:25%;display:inline-block;padding:8px;">
-                            <img src="${escapeHtml(contentLogo)}" alt="${title} logo" style="display:block;width:150px;height:150px;object-fit:contain;border-radius:12px;" />
-                          </span>
                         </a>
                       </td>
                     </tr>
@@ -112,11 +114,15 @@ export const buildBirthdayMailHtml = ({
                     <tr>
                       <td style="padding:0 18px 18px 18px;">
                         <table role="presentation" cellspacing="0" cellpadding="0">
-                          <tr>
-                            <td style="padding:10px 12px;border-radius:16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);">
-                              <img src="${escapeHtml(contentLogo)}" alt="${title} logo" style="display:block;width:150px;height:150px;object-fit:contain;border-radius:12px;" />
-                            </td>
-                          </tr>
+                    <tr>
+                      <td style="position:relative;">
+                        <a href="${escapeHtml(href)}" style="display:block;text-decoration:none;position:relative;">
+                          <span style="position:absolute;right:16px;bottom:25%;display:inline-block;padding:8px;">
+                            <img src="${escapeHtml(contentLogo)}" alt="${title} logo" style="display:block;width:20px;height:20px;border-radius:12px;" />
+                          </span>
+                        </a>
+                      </td>
+                    </tr>
                         </table>
                       </td>
                     </tr>
@@ -168,7 +174,7 @@ export const buildBirthdayMailHtml = ({
                                         <div style="font-family:Arial,sans-serif;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#93c5fd;margin-bottom:6px;">Happy Birthday</div>
                                         ${authorImage ? `<img src="${escapeHtml(authorImage)}" alt="${escapeHtml(author.fullName)}" style="display:inline-block;width:96px;height:96px;object-fit:cover;border-radius:12px;margin:8px 0;" />` : ''}
                                         <div style="font-family:Arial,sans-serif;font-size:32px;line-height:1.12;font-weight:800;margin-bottom:10px;max-width:560px;">Hi ${escapeHtml(author.fullName)}</div>
-                                        <div style="font-family:Arial,sans-serif;font-size:16px;line-height:1.75;color:#dbeafe;max-width:560px;">Golpo picked a few stories and audio titles that match the contents you were included with. Open any card to jump straight into it.</div>
+                                        <div style="font-family:Arial,sans-serif;font-size:16px;line-height:1.75;color:#dbeafe;max-width:560px;">GolPro picked a few stories and audio titles that match the contents you were included with. Open any card to jump straight into it.</div>
                                     </td>
                                   </tr>
                                 </table>
