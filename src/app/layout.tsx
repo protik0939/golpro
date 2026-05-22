@@ -57,9 +57,8 @@ export default function RootLayout({
       <head>
         <link
           rel="icon"
-          href="./assets/icons/icon.svg"
-          type="image/<generated>"
-          sizes="<generated>"
+          href="/favicon.svg"
+          type="image/svg+xml"
         />
         <link rel="manifest" href="/manifest.json" />
       </head>

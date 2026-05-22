@@ -154,7 +154,7 @@ export default function Register() {
   };
 
   useEffect(() => {
-    console.log(confirmPassword, formData.password);
+    // console.log(confirmPassword, formData.password);
 
     if (confirmPassword !== formData.password && confirmPassword !== "") {
       setPasswordError("Passwords do not match");
@@ -182,13 +182,13 @@ export default function Register() {
       body: JSON.stringify(formData),
     });
 
-    const data = await res.json();
+    // const data = await res.json();
 
     if (res.ok) {
       router.push("/login");
       setRegisteringUser(false);
     } else {
-      console.log(data.error);
+      // console.log(data.error);
       setRegisteringUser(false);
     }
   };
@@ -221,7 +221,7 @@ export default function Register() {
     // Directly use formData.email to avoid unnecessary async state update delays
     const emailToSend = formData.email;
     setEmail(emailToSend);
-    console.log(emailToSend);
+    // console.log(emailToSend);
 
     if (!isValidEmail(emailToSend)) {
       setEmailValidationError("Please enter a valid email.");
@@ -247,8 +247,8 @@ export default function Register() {
       setIsOtpSent(true);
     } else {
       setCanResend(true);
-      setOtpSendError(data.error || "Failed to send OTP");
-      console.log(otpSendError);
+      setOtpSendError(data.error || otpSendError || "Failed to send OTP");
+      // console.log(otpSendError);
       setIsOtpSent(true);
     }
   };
@@ -271,7 +271,7 @@ export default function Register() {
     setOtpVerifying(false);
 
     if (response.ok) {
-      console.log("weee! Thikaso tumi!");
+      // console.log("weee! Thikaso tumi!");
       setFormData(({ ...formData, emailVerified: "verified" }));
       setIsOtpSent(false);
       setOtpVerifying(false);

@@ -1,5 +1,5 @@
 'use client'
-import { TMusicContextType } from '@/DummyApi/typeScript';
+import { TDirectAudioTrack, TMusicContextType } from '@/DummyApi/typeScript';
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 const MusicContext = createContext<TMusicContextType | undefined>(undefined);
@@ -22,11 +22,22 @@ export const MusicProvider: React.FC<MusicProviderProps> = ({ children }) => {
     const [selectedMusicIndex, setSelectedMusicIndex] = useState<number | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [directAudioTrack, setDirectAudioTrack] = useState<TDirectAudioTrack | null>(null);
 
     const playMusic = (cIndex: number, sIndex: number, eIndex: number) => {
+        setDirectAudioTrack(null);
         setSelectedContentIndex(cIndex);
         setSelectedSeasonIndex(sIndex);
         setSelectedMusicIndex(eIndex);
+        setIsPlaying(true);
+        setIsVisible(true);
+    };
+
+    const playDirectAudio = (track: TDirectAudioTrack) => {
+        setSelectedContentIndex(null);
+        setSelectedSeasonIndex(null);
+        setSelectedMusicIndex(null);
+        setDirectAudioTrack(track);
         setIsPlaying(true);
         setIsVisible(true);
     };
@@ -42,6 +53,7 @@ export const MusicProvider: React.FC<MusicProviderProps> = ({ children }) => {
         setSelectedContentIndex(null);
         setSelectedSeasonIndex(null);
         setSelectedMusicIndex(null);
+        setDirectAudioTrack(null);
     };
 
     return (
@@ -52,7 +64,9 @@ export const MusicProvider: React.FC<MusicProviderProps> = ({ children }) => {
                 selectedMusicIndex,
                 isPlaying,
                 isVisible,
+                directAudioTrack,
                 playMusic,
+                playDirectAudio,
                 stopMusic,
                 playControl,
             }}

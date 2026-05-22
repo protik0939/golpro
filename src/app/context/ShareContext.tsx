@@ -46,7 +46,7 @@ export const ShareProvider: React.FC<ShareProviderProps> = ({ children }) => {
       }
 
       setShareStatus('Web Share API is not supported.');
-      console.log("Web Share API is not supported");
+      // console.log("Web Share API is not supported");
     }
   };
 

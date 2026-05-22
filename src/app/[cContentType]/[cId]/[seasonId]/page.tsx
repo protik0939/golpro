@@ -14,7 +14,7 @@ async function fetchData(cId: string, seasonId: string) {
         await connectDB();
         const series = await Content.findOne({ cId });
         if (!series) {
-            console.log(`${cId} Series not found`);
+            // console.log(`${cId} Series not found`);
             return null;
         }
 
@@ -29,7 +29,7 @@ async function fetchData(cId: string, seasonId: string) {
 export async function generateMetadata({ params }: { params: paramsType }): Promise<Metadata> {
     const { cId, seasonId } = await params;
     const data = await fetchData(cId, seasonId);
-    console.log('fetched data: ', data);
+    // console.log('fetched data: ', data);
 
     if (!data) {
         return {

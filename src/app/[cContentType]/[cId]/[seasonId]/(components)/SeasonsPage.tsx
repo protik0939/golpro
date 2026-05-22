@@ -27,7 +27,7 @@ export default function SeasonsPage() {
   useEffect(() => {
     const fetchSeasonsContent = async () => {
       try {
-        console.log(cContentType, cId, seasonId);
+        // console.log(cContentType, cId, seasonId);
         const res = await fetch(`/api/contentcrud/bySeason/${cContentType}/${cId}/${seasonId}`);
         if (!res.ok) throw new Error("Failed to fetch season contents");
         const data = await res.json();

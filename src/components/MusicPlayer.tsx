@@ -6,18 +6,36 @@ import './MusicPlayer.css'
 import { TbPlayerPause, TbPlayerPlay, TbPlayerStop, TbPlayerTrackNext, TbPlayerTrackPrev, TbRepeat, TbRepeatOff, TbVolume, TbVolumeOff } from "react-icons/tb";
 import { RiForward5Line, RiReplay5Line } from "react-icons/ri";
 import { useMusic } from '@/app/context/MusicContext';
-import { IAudio, IEpisode } from '@/DummyApi/typeScript';
+import { IAudio, IEpisode, TDirectAudioTrack } from '@/DummyApi/typeScript';
+
+// type PlaybackQueueItem = {
+//     musicIndex: number;
+//     seasonIndex: number;
+//     episodeIndex: number;
+// };
+
+const buildPlaybackQueue = (fullApi: IAudio[]) =>
+    fullApi.flatMap((music, musicIndex) =>
+        music.cSeasons.flatMap((season, seasonIndex) =>
+            season.cEpisodes.map((_, episodeIndex) => ({
+                musicIndex,
+                seasonIndex,
+                episodeIndex,
+            })),
+        ),
+    );
 
 
 interface MusicPlayerProps {
-    music: IEpisode;
-    totalMusic: number;
-    totalSeasons: number;
-    totalEpisodes: number;
-    fullApi: IAudio[];
+    music?: IEpisode;
+    directAudioTrack?: TDirectAudioTrack | null;
+    totalMusic?: number;
+    totalSeasons?: number;
+    totalEpisodes?: number;
+    fullApi?: IAudio[];
 }
 
-const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeasons, totalEpisodes, fullApi }) => {
+const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, directAudioTrack, totalMusic = 0, totalSeasons = 0, totalEpisodes = 0, fullApi = [] }) => {
     const playerRef = useRef<ReactPlayer | null>(null);
     const [muted, setMuted] = useState(false);
     const [volume, setVolume] = useState(1.0);
@@ -37,6 +55,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
     };
 
     const { playMusic, isPlaying, stopMusic, playControl, selectedContentIndex, selectedSeasonIndex, selectedMusicIndex } = useMusic();
+    const isDirectAudio = Boolean(directAudioTrack);
+    const mediaTitle = directAudioTrack?.title ?? music?.cTitle ?? '';
+    const mediaImage = directAudioTrack?.image ?? music?.cSquare ?? '';
+    const mediaSource = directAudioTrack?.audioSrc ?? music?.cAudioSrc ?? '';
 
     useEffect(() => {
         setIsClient(true); // Set to true only on the client side
@@ -76,6 +98,11 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
     };
 
     const handleEnded = () => {
+        if (isDirectAudio) {
+            stopMusic();
+            return;
+        }
+
         if (selectedMusicIndex !== null && selectedSeasonIndex !== null && selectedContentIndex !== null) {
             let nextMusic = selectedContentIndex;
             let nextSeason = selectedSeasonIndex;
@@ -96,38 +123,29 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
     }
 
     const handlePrev = () => {
+        if (isDirectAudio) {
+            return;
+        }
+
         if (selectedMusicIndex !== null && selectedSeasonIndex !== null && selectedContentIndex !== null) {
-            let prevMusic = selectedContentIndex;
-            let prevSeason = selectedSeasonIndex;
-            let prevEpisode = selectedMusicIndex - 1;
+            const playbackQueue = buildPlaybackQueue(fullApi);
+            const currentIndex = playbackQueue.findIndex(
+                (item) =>
+                    item.musicIndex === selectedContentIndex &&
+                    item.seasonIndex === selectedSeasonIndex &&
+                    item.episodeIndex === selectedMusicIndex,
+            );
 
-            // Check if the episode index is valid for the current season
-            if (prevEpisode < 0) {
-                prevSeason--; // Move to the previous season
-                if (prevSeason >= 0) {
-                    // Get the last episode of the previous season
-                    prevEpisode = fullApi[prevMusic].cSeasons[prevSeason].cEpisodes.length - 1;
-                } else {
-                    // If we're at the first season, move to the previous music and get the last season's last episode
-                    prevMusic--;
-                    if (prevMusic >= 0) {
-                        prevSeason = fullApi[prevMusic].cSeasons.length - 1;
-                        prevEpisode = fullApi[prevMusic].cSeasons[prevSeason].cEpisodes.length - 1;
-                    } else {
-                        // If we're at the first content, wrap around to the last content
-                        prevMusic = fullApi.length - 1;
-                        prevSeason = fullApi[prevMusic].cSeasons.length - 1;
-                        prevEpisode = fullApi[prevMusic].cSeasons[prevSeason].cEpisodes.length - 1;
-                    }
-                }
+            if (currentIndex === -1 || playbackQueue.length === 0) {
+                return;
             }
 
-            // If we're going past the first music, wrap around to the last music
-            if (prevMusic < 0) {
-                prevMusic = fullApi.length - 1;
-            }
+            const previousIndex = currentIndex === 0 ? playbackQueue.length - 1 : currentIndex - 1;
+            const previousItem = playbackQueue[previousIndex];
 
-            playMusic(prevMusic, prevSeason, prevEpisode);
+            if (previousItem) {
+                playMusic(previousItem.musicIndex, previousItem.seasonIndex, previousItem.episodeIndex);
+            }
         }
     };
 
@@ -162,7 +180,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
 
             <ReactPlayer
                 ref={playerRef}
-                url={music.cAudioSrc}
+                url={mediaSource}
                 playing={isPlaying}
                 loop={loop}
                 playbackRate={playbackRate}
@@ -195,13 +213,13 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
                 <div className='flex justify-between'>
                     <div className='w-20 h-20 relative aspect-square'>
                         <Image
-                            src={music.cSquare}
-                            alt={music.cTitle}
+                            src={mediaImage || 'https://placehold.co/600x600?text=GolPro'}
+                            alt={mediaTitle || 'Audio'}
                             width={600}
                             height={600}
                             className="w-20 h-20 rounded-lg shadow-md aspect-square"
                         />
-                        <div className="sm:text-md text-xs w-full text-center font-bold absolute bottom-0 ">{music.cTitle}</div>
+                        <div className="sm:text-md text-xs w-full text-center font-bold absolute bottom-0 ">{mediaTitle}</div>
                     </div>
                     <div className='flex w-full flex-col mt-0 justify-center'>
                         <div className="flex space-x-4 justify-between p-3 h-full">
@@ -243,12 +261,14 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
                                         <TbPlayerStop className='text-md cursor-pointer' />
                                     </button>
 
-                                    <button
-                                        className=""
-                                        onClick={handlePrev}
-                                    >
-                                        <TbPlayerTrackPrev className='text-md cursor-pointer' />
-                                    </button>
+                                    {isDirectAudio ? null : (
+                                        <button
+                                            className=""
+                                            onClick={handlePrev}
+                                        >
+                                            <TbPlayerTrackPrev className='text-md cursor-pointer' />
+                                        </button>
+                                    )}
 
                                     <button
                                         className=""
@@ -258,19 +278,23 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ music, totalMusic, totalSeaso
                                     </button>
 
 
-                                    <button
-                                        className=""
-                                        onClick={handleNext}
-                                    >
-                                        <TbPlayerTrackNext className='text-md cursor-pointer' />
-                                    </button>
+                                    {isDirectAudio ? null : (
+                                        <button
+                                            className=""
+                                            onClick={handleNext}
+                                        >
+                                            <TbPlayerTrackNext className='text-md cursor-pointer' />
+                                        </button>
+                                    )}
 
-                                    <button
-                                        className=""
-                                        onClick={() => setLoop(!loop)}
-                                    >
-                                        {loop ? <TbRepeat className='text-md cursor-pointer' /> : <TbRepeatOff className='text-md cursor-pointer' />}
-                                    </button>
+                                    {isDirectAudio ? null : (
+                                        <button
+                                            className=""
+                                            onClick={() => setLoop(!loop)}
+                                        >
+                                            {loop ? <TbRepeat className='text-md cursor-pointer' /> : <TbRepeatOff className='text-md cursor-pointer' />}
+                                        </button>
+                                    )}
 
                                 </div>
                                 <div className="flex items-center space-x-4">

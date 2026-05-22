@@ -21,7 +21,7 @@ export const BookmarkProvider: React.FC<{ children: ReactNode }> = ({ children }
     // Fetch bookmarks when session is available
     const fetchBookmarks = async () => {
       if (!session) {
-        console.log("User not logged in");
+        // console.log("User not logged in");
         setIsLoading(false);
         return;
       }

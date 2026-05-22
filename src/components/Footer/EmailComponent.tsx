@@ -22,8 +22,8 @@ export default function EmailComponent() {
             if (response.ok) setEmail("");
             setLoading(false);
         } catch (error) {
-            setMessage(`Something went wrong. Please try again:`);
-            console.log(error);
+            setMessage(`Something went wrong. Please try again: ${error instanceof Error ? error.message : "Unknown error"}`);
+            // console.log(error);
             setLoading(false);
         }
     };

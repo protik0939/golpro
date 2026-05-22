@@ -8,8 +8,8 @@ export type paramsType = Promise<{ cContentType: string; cId: string; cSeasons: 
 export async function GET(req: Request, { params }: { params: paramsType }) {
     try {
         await connectDB();
-        const { cContentType, cId, cSeasons } = await params;
-        console.log(cContentType, cId, cSeasons);
+        const { cId, cSeasons } = await params;
+        // console.log(cContentType, cId, cSeasons);
         const series = await Content.findOne({ cId });
         if (!series) {
             return NextResponse.json({ message: 'Content not found for the given cContentType and cId.' }, { status: 404 });

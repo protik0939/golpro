@@ -13,7 +13,7 @@ export async function PUT(req: Request) {
             { username, name, bio, dateOfBirth, gender, image },
             { new: true } // Return the updated document
         );
-        console.log(updatedUser);
+        // console.log(updatedUser);
         return NextResponse.json({ message: "Profile updated", user: updatedUser }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ message: "Error updating profile", error }, { status: 500 });

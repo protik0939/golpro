@@ -27,7 +27,7 @@ export default function AGenre({ genreId }: { genreId: string }) {
         if (!res.ok) throw new Error("Failed to fetch bookmarked contents");
         const data = await res.json();
         setGeneredContentent(data.contents);
-        console.log(generedContentent);
+        // console.log(generedContentent);
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);

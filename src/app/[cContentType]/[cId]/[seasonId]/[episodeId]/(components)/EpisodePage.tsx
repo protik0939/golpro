@@ -6,7 +6,8 @@ import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useMusic } from '@/app/context/MusicContext';
 
 
 export default function EpisodePage() {
@@ -14,6 +15,14 @@ export default function EpisodePage() {
     const [episode, setEpisode] = useState<IEpisode>();
     const [episodeNo, setEpisodeNo] = useState([]);
     const [loadingEpisode, setLoadingEpisode] = useState(true);
+    const { playDirectAudio } = useMusic();
+
+    const isAudioStory = useMemo(() => {
+        const normalizedContentType = cContentType?.toLowerCase().replace(/\s+/g, '');
+        return normalizedContentType === 'audiostory' || normalizedContentType === 'audio-story';
+    }, [cContentType]);
+
+    const hasPlayableAudio = Boolean(episode?.cAudioSrc && episode.cAudioSrc !== 'null' && isAudioStory);
 
 
     useEffect(() => {
@@ -68,7 +77,7 @@ export default function EpisodePage() {
                 <div className="top-2 p-5 w-full flex flex-col justify-center items-center">
                     <div className="flex flex-col justify start md:max-w-2/3 w-full">
                         {
-                            cContentType == "audiostory" ?
+                            isAudioStory ?
                                 <>
                                     <div className="w-full h-auto aspect-video skeletonLoaderBg animate-pulse rounded-md mb-2 pb-2.5"></div>
                                     <div className="w-full h-4 skeletonLoaderBg animate-pulse rounded-md mb-2"></div>
@@ -149,6 +158,22 @@ export default function EpisodePage() {
                         ></iframe>
                     )
                 }
+                {hasPlayableAudio ? (
+                    <button
+                        type="button"
+                        className="btn btn-primary md:max-w-2/3 w-full mb-4"
+                        onClick={() =>
+                            playDirectAudio({
+                                title: episode?.cTitle || 'Audio story',
+                                audioSrc: episode?.cAudioSrc || '',
+                                image: episode?.cSquare || episode?.cLogo || episode?.cPortrait || episode?.cLandscape || '',
+                                description: episode?.cDescription || '',
+                            })
+                        }
+                    >
+                        Play audio version
+                    </button>
+                ) : null}
                 {
                     episode?.cFullEpisode != "null" &&
                     <p className="whitespace-pre-wrap md:max-w-2/3 w-full">

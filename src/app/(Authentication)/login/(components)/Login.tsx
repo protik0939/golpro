@@ -25,7 +25,7 @@ export default function Login() {
     e.preventDefault();
     setLoggingIn(true);
     setError("");
-    console.log(email, password);
+    // console.log(email, password);
 
     const result = await signIn("credentials", {
       email,
@@ -34,8 +34,8 @@ export default function Login() {
     });
 
     if (result?.error) {
-      setError("Invalid email or password");
-      console.log(error);
+      setError("Invalid email or password: " + error || "Unknown error");
+      // console.log(error);
       setLoggingIn(false);
     } else {
       router.push("/");

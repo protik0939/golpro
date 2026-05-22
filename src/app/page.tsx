@@ -39,7 +39,7 @@ async function fetchData() {
 
 export default async function Page() {
   const data = await fetchData();
-  console.log(data);
+  // console.log(data);
   const upBannerData = data.filter((item: IContent) => item.cHomePage?.includes('upbanner')).reverse();
   const currentMonthData = data.filter((item: IContent) => item.cHomePage?.includes('eidvibe')).reverse();
   const editorsChoiceData = data.filter((item: IContent) => item.cHomePage?.includes('editorschoice')).reverse();

@@ -14,13 +14,13 @@ async function fetchData(cId: string, seasonId: string, episodeId: string) {
     await connectDB();
     const series = await Content.findOne({ cId });
     if (!series) {
-      console.log(`${cId} Series not found`);
+      // console.log(`${cId} Series not found`);
       return null;
     }
 
     const season: ISeason | undefined = series.cSeasons.find((s: ISeason) => s.cId === seasonId);
     if (!season) {
-      console.log(`Season not found`);
+      // console.log(`Season not found`);
       return null;
     }
 

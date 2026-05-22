@@ -55,13 +55,22 @@ export interface TMusicDataAnn {
     description: string;
 }
 
+export interface TDirectAudioTrack {
+    title: string;
+    audioSrc: string;
+    image?: string;
+    description?: string;
+}
+
 export interface TMusicContextType {
     selectedContentIndex: number | null;
     selectedSeasonIndex: number | null;
     selectedMusicIndex: number | null;
     isPlaying: boolean;
     isVisible: boolean;
+    directAudioTrack: TDirectAudioTrack | null;
     playMusic: (cIndex: number, sIndex: number, eIndex: number) => void;
+    playDirectAudio: (track: TDirectAudioTrack) => void;
     stopMusic: () => void;
     playControl: () => void;
 }
