@@ -1,6 +1,8 @@
 import React from 'react'
 import AuthorsList from './(components)/AuthorsList'
 
+export const revalidate = 21600;
+
 
 export async function generateMetadata(){
   return {

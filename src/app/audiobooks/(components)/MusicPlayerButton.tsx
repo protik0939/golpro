@@ -24,13 +24,17 @@ export default function MusicPlayerButton() {
         fetchEpisode();
     }, []);
 
-    if (selectedMusicIndex === null || selectedContentIndex === null || selectedSeasonIndex === null) return null;
+    const selectedContent = selectedContentIndex === null ? null : songs[selectedContentIndex];
+    const selectedSeason = selectedContent && selectedSeasonIndex === null ? null : selectedContent?.cSeasons[selectedSeasonIndex ?? 0] ?? null;
+    const selectedMusic = selectedSeason && selectedMusicIndex === null ? null : selectedSeason?.cEpisodes[selectedMusicIndex ?? 0] ?? null;
+
+    if (!selectedContent || !selectedSeason || !selectedMusic) return null;
 
     return (
         <div className="fixed bottom-20 lg:bottom-4  w-full z-40 flex items-center p-2 justify-center rounded-lg pointer-events-none">
             <div className="relative w-full max-w-3xl bg-black/50 backdrop-blur-lg rounded-lg shadow-lg pointer-events-auto">
                 <div className="relative z-20">
-                    <MusicPlayer music={songs[selectedContentIndex].cSeasons[selectedSeasonIndex].cEpisodes[selectedMusicIndex]} fullApi={songs} totalMusic={songs.length} totalSeasons={songs[selectedContentIndex].cSeasons.length} totalEpisodes={songs[selectedContentIndex].cSeasons[selectedSeasonIndex].cEpisodes.length} />
+                    <MusicPlayer music={selectedMusic} fullApi={songs} totalMusic={songs.length} totalSeasons={selectedContent.cSeasons.length} totalEpisodes={selectedSeason.cEpisodes.length} />
                 </div>
             </div>
         </div>

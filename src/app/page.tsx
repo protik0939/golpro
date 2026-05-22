@@ -6,6 +6,8 @@ import { connectDB } from './lib/mongodb';
 import Content from './models/Content';
 import { IContent } from './models/types';
 
+export const revalidate = 21600;
+
 const OPTIONS: EmblaOptionsType = { dragFree: true };
 const OPTIONSS: EmblaOptionsType = { loop: true };
 

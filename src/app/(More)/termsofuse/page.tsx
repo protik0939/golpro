@@ -1,6 +1,8 @@
 import React from 'react'
 import TermsOfUse from './(components)/TermsOfUse';
 
+export const revalidate = 21600;
+
 
 export async function generateMetadata(){
   return {

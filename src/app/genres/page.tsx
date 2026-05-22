@@ -1,6 +1,8 @@
 import React from 'react'
 import Genre from './(components)/Genre'
 
+export const revalidate = 21600;
+
 
 export async function generateMetadata(){
   return {

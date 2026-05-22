@@ -4,6 +4,8 @@ import { connectDB } from '@/app/lib/mongodb';
 import Genre from '@/app/models/Genre';
 import type { Metadata } from 'next';
 
+export const revalidate = 21600;
+
 export type paramsType = Promise<{ genreId: string }>;
 
 async function fetchData(genreId: string) {

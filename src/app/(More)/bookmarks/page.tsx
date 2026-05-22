@@ -1,6 +1,8 @@
 import React from 'react'
 import Bookmarks from './(Components)/Bookmarks'
 
+export const revalidate = 21600;
+
 
 export async function generateMetadata(){
   return {

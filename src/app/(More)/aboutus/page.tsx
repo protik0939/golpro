@@ -1,6 +1,8 @@
 import React from 'react'
 import AboutUs from './(components)/AboutUs'
 
+export const revalidate = 21600;
+
 
 export async function generateMetadata(){
   return {

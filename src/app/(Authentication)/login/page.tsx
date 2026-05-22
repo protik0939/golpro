@@ -1,6 +1,8 @@
 import React from 'react'
 import Login from './(components)/Login'
 
+export const revalidate = 21600;
+
 export async function generateMetadata(){
   return {
     title: 'Log in | GolPro',

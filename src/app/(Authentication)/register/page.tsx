@@ -1,6 +1,8 @@
 import React from 'react'
 import Register from './(components)/Register'
 
+export const revalidate = 21600;
+
 export async function generateMetadata(){
     return {
       title: 'Register | GolPro',

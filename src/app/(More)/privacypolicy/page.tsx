@@ -1,6 +1,8 @@
 import React from 'react'
 import PrivacyPolicy from './(components)/PrivacyPolicy'
 
+export const revalidate = 21600;
+
 
 export async function generateMetadata(){
   return {

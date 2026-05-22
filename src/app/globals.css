@@ -74,6 +74,33 @@
   );
 }
 
+@layer base {
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  .btn {
+    cursor: pointer;
+    transition:
+      transform 160ms ease,
+      filter 160ms ease,
+      box-shadow 160ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  button:not(:disabled):hover,
+  [role='button']:not([aria-disabled='true']):hover,
+  .btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.04);
+  }
+
+  button:not(:disabled):active,
+  [role='button']:not([aria-disabled='true']):active,
+  .btn:active {
+    transform: translateY(0);
+  }
+}
 @media (max-width: 767px) {
   .carousal-bg {
     background: linear-gradient(

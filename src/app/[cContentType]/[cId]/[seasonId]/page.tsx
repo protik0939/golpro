@@ -5,6 +5,8 @@ import Content from '@/app/models/Content';
 import { ISeason } from '@/DummyApi/typeScript';
 import { Metadata } from 'next';
 
+export const revalidate = 21600;
+
 export type paramsType = Promise<{ cId: string; seasonId: string }>;
 
 async function fetchData(cId: string, seasonId: string) {

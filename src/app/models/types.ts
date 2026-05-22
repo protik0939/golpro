@@ -34,6 +34,9 @@ export interface ISeason {
   cLogo: string;
   cCard: string;
   cSquare: string;
+  cTrailerYtId?: string | null;
+  width?: number;
+  height?: number;
   cEpisodes: IEpisode[];
   cDescription: string;
   cLink: string;
@@ -62,9 +65,12 @@ export interface IEpisode {
 export interface IAuthor {
 
   authorId: string;
+  email: string;
   imageUrl: string;
   fullName: string;
   description: string;
+  dateOfBirth: string;
+  birthdayMailLastSentYear?: number | null;
 }
 
 

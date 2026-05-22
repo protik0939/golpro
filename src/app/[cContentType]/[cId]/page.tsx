@@ -4,6 +4,8 @@ import { connectDB } from '@/app/lib/mongodb';
 import Content from '@/app/models/Content';
 import type { Metadata } from 'next';
 
+export const revalidate = 21600;
+
 export type paramsType = Promise<{ cId: string }>;
 
 

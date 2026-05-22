@@ -1,6 +1,8 @@
 import React from 'react'
 import Audiobooks from './(components)/Audiobooks'
 
+export const revalidate = 21600;
+
 
 export async function generateMetadata(){
   return {

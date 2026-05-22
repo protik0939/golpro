@@ -10,7 +10,7 @@ export async function GET(req: Request, { params }: { params: paramsType }) {
         const { authorId } = await params;
         const content = await Content.find(
             { cAuthors: authorId },
-            'cId cTitle cDescription cContentType cLogo cPortrait'
+            'cId cTitle cDescription cContentType cLandscape cLogo cPortrait'
         );
 
         if (!content.length) {

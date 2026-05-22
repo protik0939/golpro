@@ -4,6 +4,8 @@ import { connectDB } from '@/app/lib/mongodb';
 import Authors from '@/app/models/Authors';
 import { Metadata } from 'next';
 
+export const revalidate = 21600;
+
 
 export type paramsType = Promise<{ authorId: string }>;
 

@@ -7,19 +7,19 @@ export async function POST(req: Request) {
     }
 
     try {
-        const { authorId, fullName, description, imageUrl, email } = await req.json();
+        const { adminEmail, authorId, email: authorEmail, fullName, description, imageUrl, dateOfBirth } = await req.json();
 
-        if (email !== "protik0939@gmail.com") {
+        if (adminEmail !== "protik0939@gmail.com") {
             return new Response(JSON.stringify({ message: "Unauthorized: You do not have permission to add authors." }), { status: 403 });
         }
 
-        if (!authorId || !fullName || !description || !imageUrl) {
+        if (!authorId || !authorEmail || !fullName || !description || !imageUrl || !dateOfBirth) {
             return new Response(JSON.stringify({ message: "All fields are required" }), { status: 400 });
         }
 
         await connectDB();
 
-        const newAuthor = new Authors({ authorId, fullName, description, imageUrl });
+        const newAuthor = new Authors({ authorId, email: authorEmail, fullName, description, imageUrl, dateOfBirth });
         await newAuthor.save();
 
         return new Response(JSON.stringify({ message: "Author added successfully" }), { status: 201 });

@@ -34,6 +34,17 @@ export const ShareProvider: React.FC<ShareProviderProps> = ({ children }) => {
         console.error("Sharing failed", error);
       }
     } else {
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url);
+          setSharedContent({ title, url });
+          setShareStatus('Link copied to clipboard.');
+          return;
+        }
+      } catch (error) {
+        console.error('Clipboard copy failed', error);
+      }
+
       setShareStatus('Web Share API is not supported.');
       console.log("Web Share API is not supported");
     }

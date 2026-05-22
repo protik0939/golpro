@@ -5,6 +5,8 @@ import { connectDB } from '@/app/lib/mongodb'
 import Content from '@/app/models/Content'
 import { IEpisode, ISeason } from '@/app/models/types'
 
+export const revalidate = 21600;
+
 export type paramsType = Promise<{ cId: string; seasonId: string; episodeId: string }>;
 
 async function fetchData(cId: string, seasonId: string, episodeId: string) {
