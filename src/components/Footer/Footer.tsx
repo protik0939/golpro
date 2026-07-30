@@ -45,6 +45,7 @@ export default function Footer() {
                         alt="Golpro Icon"
                         width={80}
                         height={80}
+                        style={{ width: 'auto', height: 'auto' }}
                     />
                     <div>
                         <Image
@@ -52,6 +53,7 @@ export default function Footer() {
                             alt="Golpro Logo"
                             width={80}
                             height={80}
+                            style={{ width: 'auto', height: 'auto' }}
                         />
                         <h1 className="text-xs text-secondary">Copyright {currentYear} © All rights Reserved by GolPro</h1>
                     </div>

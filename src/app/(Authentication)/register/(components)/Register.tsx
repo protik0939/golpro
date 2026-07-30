@@ -11,7 +11,7 @@ import { LiaBirthdayCakeSolid } from 'react-icons/lia';
 import { BsGenderAmbiguous } from 'react-icons/bs';
 import { CiImageOn } from 'react-icons/ci';
 import Cropper, { ReactCropperElement } from 'react-cropper';
-import '/node_modules/react-cropper/node_modules/cropperjs/dist/cropper.css';
+import 'react-cropper/node_modules/cropperjs/dist/cropper.css';
 import axios from 'axios';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { CgRename } from 'react-icons/cg';

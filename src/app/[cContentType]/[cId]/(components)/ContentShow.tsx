@@ -223,7 +223,7 @@ export default function ContentShow({ cId }: CIdProps) {
                 <Image unoptimized src={bgImages.banner} alt="Responsive Image" width={2375} height={825} className="hidden lg:block object-cover" placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(2375, 825))}`} onError={(e) => (e.currentTarget.src = '/src/app/assets/errorload/bannerLoad.webp')} />
                 <div className='absolute contents-bg w-full h-full bottom-0' />
                 <div className='absolute bottom-0 w-full p-5'>
-                    <Image unoptimized src={bgImages.logo} alt="Logo Image" width='200' height='200' className={`!w-1/3 lg:!w-1/8 object-cover`} loading='eager' />
+                    <Image unoptimized src={bgImages.logo} alt="Logo Image" width={200} height={200} className={`!w-1/3 lg:!w-1/8 object-cover`} style={{ height: 'auto' }} loading='eager' />
                     <div className='flex flex-col lg:flex-row justify-between'>
                         <div>
                             <h1 className='font-bold text-lg'>{bgImages.title}</h1>

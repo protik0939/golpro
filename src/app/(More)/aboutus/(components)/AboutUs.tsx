@@ -12,9 +12,10 @@ export default function AboutUs() {
                 <Image
                     src={golproLogo}
                     alt="Golpro Logo"
-                    height="200"
-                    width="400"
-                    className="w-44 h-32 mb-4"
+                    height={200}
+                    width={400}
+                    className="w-44 h-auto mb-4"
+                    style={{ width: 'auto', height: 'auto' }}
                 />
                 <h1 className="text-4xl font-bold">আমাদের সম্পর্কে</h1>
             </div>

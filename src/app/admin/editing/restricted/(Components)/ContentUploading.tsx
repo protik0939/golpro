@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -10,6 +10,7 @@ import EpisodeAddingForm from './EpisodeAddingForm';
 import GenreAddingForm from './GenreAddingForm';
 import AuthorAddingForm from './AuthorAddingForm';
 import { buildBirthdayMailHtml } from '@/app/lib/birthday-mail';
+import { FiFilm, FiLayers, FiRadio, FiTag, FiUsers, FiMail, FiSearch, FiRefreshCw, FiEdit2, FiTrash2, FiEye, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
 
 type TabKey = 'content' | 'seasons' | 'episodes' | 'genre' | 'authors';
 
@@ -54,18 +55,23 @@ type BirthdayMailPreviewContent = {
 const birthdayMailSiteLogoUrl = 'https://i.ibb.co.com/7d2BRkhh/golpro-logo.webp';
 const birthdayMailBackgroundImageUrl = 'https://i.ibb.co.com/vC01wvt2/golproseo.webp';
 
-const tabs: Array<{ key: TabKey; label: string }> = [
-  { key: 'content', label: 'Content' },
-  { key: 'seasons', label: 'Seasons' },
-  { key: 'episodes', label: 'Episodes' },
-  { key: 'genre', label: 'Genres' },
-  { key: 'authors', label: 'Authors' },
+const tabs: Array<{ key: TabKey; label: string; icon: React.ElementType }> = [
+  { key: 'content', label: 'Contents', icon: FiFilm },
+  { key: 'seasons', label: 'Seasons', icon: FiLayers },
+  { key: 'episodes', label: 'Episodes', icon: FiRadio },
+  { key: 'genre', label: 'Genres', icon: FiTag },
+  { key: 'authors', label: 'Authors', icon: FiUsers },
 ];
 
 export default function ContentUploading() {
   const [forms, setForms] = useState<TabKey>('content');
   const [contents, setContents] = useState<ContentFormContent[]>([]);
   const [selectedContent, setSelectedContent] = useState<ContentFormContent | null>(null);
+  const [viewingContent, setViewingContent] = useState<ContentFormContent | null>(null);
+  const [deletingContent, setDeletingContent] = useState<ContentFormContent | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [contentTypeFilter, setContentTypeFilter] = useState('all');
+
   const [authors, setAuthors] = useState<AuthorListItem[]>([]);
   const [authorWorks, setAuthorWorks] = useState<BirthdayMailPreviewContent[]>([]);
   const [birthdayMailComposer, setBirthdayMailComposer] = useState<BirthdayMailComposerState>({
@@ -74,6 +80,7 @@ export default function ContentUploading() {
     recipientEmail: '',
     recipientImageUrl: '',
   });
+
   const [loadingContents, setLoadingContents] = useState(false);
   const [loadingError, setLoadingError] = useState('');
   const [loadingAuthors, setLoadingAuthors] = useState(false);
@@ -85,6 +92,9 @@ export default function ContentUploading() {
   const [sendingBirthdayMail, setSendingBirthdayMail] = useState(false);
   const [birthdayMailMessage, setBirthdayMailMessage] = useState('');
   const [showMailPreview, setShowMailPreview] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const pageSize = 8;
   const [pagination, setPagination] = useState({ page: 1, limit: pageSize, totalItems: 0, totalPages: 1 });
 
@@ -92,6 +102,11 @@ export default function ContentUploading() {
   const router = useRouter();
 
   const isAdmin = session?.user?.email === 'protik0939@gmail.com';
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   useEffect(() => {
     if (status === 'authenticated' && !isAdmin) {
@@ -181,35 +196,35 @@ export default function ContentUploading() {
     setRefreshIndex((currentValue) => currentValue + 1);
   };
 
-  const handleDeleteContent = async (contentId: string) => {
-    if (!session?.user?.email) {
-      return;
+  const confirmDeleteContent = async () => {
+    if (!deletingContent || !session?.user?.email) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/contentcrud/${deletingContent.cId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ emeil: session.user.email }),
+      });
+
+      if (!response.ok) {
+        const error = (await response.json()) as { error?: string; message?: string };
+        throw new Error(error.error || error.message || 'Failed to delete content');
+      }
+
+      showToast(`Content "${deletingContent.cTitle || deletingContent.cId}" deleted successfully.`, 'success');
+      if (selectedContent?.cId === deletingContent.cId) {
+        setSelectedContent(null);
+      }
+      setDeletingContent(null);
+      refreshContents();
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to delete content', 'error');
+    } finally {
+      setIsDeleting(false);
     }
-
-    const confirmed = globalThis.confirm(`Delete content ${contentId}?`);
-    if (!confirmed) {
-      return;
-    }
-
-    const response = await fetch(`/api/contentcrud/${contentId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ emeil: session.user.email }),
-    });
-
-    if (!response.ok) {
-      const error = (await response.json()) as { error?: string; message?: string };
-      setLoadingError(error.error || error.message || 'Failed to delete content');
-      return;
-    }
-
-    if (selectedContent?.cId === contentId) {
-      setSelectedContent(null);
-    }
-
-    refreshContents();
   };
 
   const handleSelectBirthdayAuthor = (authorId: string) => {
@@ -265,10 +280,6 @@ export default function ContentUploading() {
     }
   };
 
-  const handleOpenBirthdayPreview = () => {
-    setShowMailPreview(true);
-  };
-
   const handleSendBirthdayMail = async () => {
     setSendingBirthdayMail(true);
     setBirthdayMailMessage('');
@@ -289,53 +300,62 @@ export default function ContentUploading() {
 
       const result = await response.json();
       if (!response.ok) {
-        throw new Error(result?.message || result?.error || 'Failed to send debug mail');
+        throw new Error(result?.message || result?.error || 'Failed to send mail');
       }
 
-      setBirthdayMailMessage(`Mail sent to ${result?.recipientEmail || birthdayMailComposer.recipientEmail}`);
+      const msg = `Mail sent successfully to ${result?.recipientEmail || birthdayMailComposer.recipientEmail}`;
+      setBirthdayMailMessage(msg);
+      showToast(msg, 'success');
     } catch (error) {
-      setBirthdayMailMessage(error instanceof Error ? error.message : 'Failed to send mail');
+      const err = error instanceof Error ? error.message : 'Failed to send mail';
+      setBirthdayMailMessage(err);
+      showToast(err, 'error');
     } finally {
       setSendingBirthdayMail(false);
     }
   };
 
+  const filteredContents = useMemo(() => {
+    return contents.filter((content) => {
+      const matchesSearch =
+        searchQuery.trim() === '' ||
+        (content.cTitle || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (content.cId || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (content.cDescription || '').toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesType =
+        contentTypeFilter === 'all' || (content.cContentType || '').toLowerCase() === contentTypeFilter.toLowerCase();
+
+      return matchesSearch && matchesType;
+    });
+  }, [contents, searchQuery, contentTypeFilter]);
+
   if (status === 'loading') {
-    return <div className='flex min-h-screen items-center justify-center'>Loading...</div>;
+    return (
+      <div className='flex min-h-screen items-center justify-center bg-base-300'>
+        <div className='flex flex-col items-center gap-3'>
+          <span className='loading loading-spinner loading-lg text-primary'></span>
+          <p className='text-sm text-base-content/70'>Authenticating Admin Studio...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!isAdmin) {
-    return <div className='flex min-h-screen items-center justify-center'>Access restricted.</div>;
+    return (
+      <div className='flex min-h-screen items-center justify-center bg-base-300 p-4'>
+        <div className='card max-w-md bg-base-100 p-6 shadow-xl text-center space-y-4'>
+          <FiAlertCircle className='mx-auto h-12 w-12 text-error' />
+          <h2 className='text-2xl font-bold'>Access Restricted</h2>
+          <p className='text-sm text-base-content/70'>You must be logged in as an administrator to access the Studio panel.</p>
+          <button onClick={() => router.push('/')} className='btn btn-primary btn-sm mx-auto'>Return to Home</button>
+        </div>
+      </div>
+    );
   }
 
   const totalPages = Math.max(pagination.totalPages, 1);
-  let contentGrid: React.ReactNode;
-  let authorWorksPreview: React.ReactNode;
-  const tabButtons = tabs.map((tab) => {
-    let currentTabClass = 'btn-ghost';
-    if (forms === tab.key) {
-      currentTabClass = 'btn-primary';
-    }
 
-    return (
-      <button key={tab.key} onClick={() => setForms(tab.key)} className={`btn btn-sm flex-1 min-w-28 ${currentTabClass}`} type='button'>
-        {tab.label}
-      </button>
-    );
-  });
-
-  let contentFormMode: 'edit' | 'create' = 'create';
-  if (selectedContent) {
-    contentFormMode = 'edit';
-  }
-
-  let birthdayMailButtonLabel = 'Send birthday mail';
-  if (sendingBirthdayMail) {
-    birthdayMailButtonLabel = 'Sending mail...';
-  }
-
-  const isContentTab = forms === 'content';
-  const previewBaseUrl = '';
   const birthdayMailPreviewHtml = buildBirthdayMailHtml({
     author: {
       fullName: birthdayMailComposer.recipientName || 'Recipient',
@@ -343,232 +363,218 @@ export default function ContentUploading() {
       imageUrl: birthdayMailComposer.recipientImageUrl || undefined,
     },
     contents: authorWorks,
-    baseUrl: previewBaseUrl,
+    baseUrl: '',
     siteLogoUrl: birthdayMailSiteLogoUrl,
     backgroundImageUrl: birthdayMailBackgroundImageUrl,
   });
 
-  if (loadingContents) {
-    contentGrid = <div className='flex min-h-48 items-center justify-center rounded-2xl border border-dashed border-base-300 text-base-content/60'>Loading contents...</div>;
-  } else if (contents.length > 0) {
-    contentGrid = contents.map((content) => (
-      <article key={content.cId} className='grid gap-4 rounded-2xl border border-base-300 bg-base-200/40 p-4 sm:grid-cols-[160px_1fr]'>
-        <div className='overflow-hidden rounded-2xl bg-base-300'>
-          <Image
-            src={content.cLandscape || content.cBanner || content.cCard || content.cPortrait || content.cLogo || content.cSquare || 'https://placehold.co/400x225?text=No+Image'}
-            alt={content.cTitle || content.cId}
-            width={400}
-            height={225}
-            unoptimized
-            className='h-40 w-full object-cover'
-          />
-        </div>
-        <div className='flex flex-col gap-3'>
-          <div className='flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between'>
-            <div>
-              <div className='flex flex-wrap gap-2'>
-                <span className='badge badge-primary badge-sm'>{content.cContentType || 'content'}</span>
-                <span className='badge badge-outline badge-sm'>{content.cId}</span>
-              </div>
-              <h3 className='mt-2 text-xl font-semibold'>{content.cTitle}</h3>
-              <p className='line-clamp-3 text-sm text-base-content/70'>{content.cDescription}</p>
-            </div>
-            <div className='flex gap-2'>
-              <button type='button' className='btn btn-outline btn-sm' onClick={() => setSelectedContent(content)}>
-                Edit
-              </button>
-              <button type='button' className='btn btn-error btn-sm' onClick={() => handleDeleteContent(content.cId)}>
-                Delete
-              </button>
-            </div>
-          </div>
-
-          <div className='flex flex-wrap gap-2 text-xs text-base-content/60'>
-            <span>Genres: {Array.isArray(content.cGenre) ? content.cGenre.length : 0}</span>
-            <span>Authors: {Array.isArray(content.cAuthors) ? content.cAuthors.length : 0}</span>
-            <span>Visits: {content.cUserVisit ?? 0}</span>
-          </div>
-        </div>
-      </article>
-    ));
-  } else {
-    contentGrid = <div className='flex min-h-48 items-center justify-center rounded-2xl border border-dashed border-base-300 text-base-content/60'>No contents found for this page.</div>;
-  }
-
-  if (loadingAuthorWorks) {
-    authorWorksPreview = <div className='mt-4 flex min-h-32 items-center justify-center rounded-2xl border border-dashed border-base-300 text-base-content/60'>Loading works...</div>;
-  } else if (authorWorksError) {
-    authorWorksPreview = <div className='mt-4 alert alert-error text-sm'>{authorWorksError}</div>;
-  } else if (authorWorks.length > 0) {
-    authorWorksPreview = (
-      <div className='mt-4 grid gap-3 md:grid-cols-2'>
-        {authorWorks.map((work) => {
-          const workImage = work.cLandscape || work.cBanner || work.cCard || work.cPortrait || work.cLogo || work.cSquare || 'https://placehold.co/400x225?text=No+Image';
-
-          return (
-            <article key={work.cId} className='overflow-hidden rounded-2xl border border-base-300 bg-base-200/40'>
-              <div className='relative aspect-video overflow-hidden'>
-                <Image src={workImage} alt={work.cTitle} fill unoptimized className='object-cover' />
-                <div className='absolute bottom-3 left-3 rounded-xl bg-black/70 px-3 py-2 text-xs font-semibold text-white backdrop-blur'>
-                  {work.cContentType || 'content'}
-                </div>
-              </div>
-              <div className='space-y-1 p-3'>
-                   <p className='text-sm font-semibold uppercase tracking-[0.2em] text-primary'>Birthday mail sender</p>
-                   <p className='text-sm text-base-content/70'>Pick an author, review the recipient details, preview the final mail, and send it immediately.</p>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-    );
-  } else {
-    authorWorksPreview = <div className='mt-4 rounded-2xl border border-dashed border-base-300 p-4 text-sm text-base-content/60'>No works were found for this author yet.</div>;
-  }
-
   return (
-    <div className='min-h-screen bg-gradient-to-b from-base-200 via-base-100 to-base-200 px-4 py-8 sm:px-6 lg:px-8'>
-      <div className='mx-auto max-w-7xl space-y-6 pt-10'>
-        <header className='rounded-3xl border border-base-300 bg-base-100 p-6 shadow-xl shadow-black/5 sm:p-8'>
-          <div className='flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between'>
-            <div className='max-w-3xl space-y-2'>
-              <p className='text-sm font-semibold uppercase tracking-[0.25em] text-primary'>Admin studio</p>
-              <h1 className='text-3xl font-black tracking-tight sm:text-4xl'>Content uploading and management</h1>
-              <p className='text-sm text-base-content/70 sm:text-base'>Create, edit, remove, and review published content from a single responsive workspace with paginated loading.</p>
-            </div>
-            <div className='grid grid-cols-2 gap-3 sm:grid-cols-4 lg:min-w-[28rem]'>
-              <div className='rounded-2xl border border-base-300 bg-base-200/60 p-4'>
-                <div className='text-xs uppercase tracking-[0.2em] text-base-content/50'>Visible</div>
-                <div className='mt-2 text-2xl font-bold'>{contents.length}</div>
-              </div>
-              <div className='rounded-2xl border border-base-300 bg-base-200/60 p-4'>
-                <div className='text-xs uppercase tracking-[0.2em] text-base-content/50'>Page</div>
-                <div className='mt-2 text-2xl font-bold'>{pagination.page}/{totalPages}</div>
-              </div>
-              <div className='rounded-2xl border border-base-300 bg-base-200/60 p-4'>
-                <div className='text-xs uppercase tracking-[0.2em] text-base-content/50'>Total</div>
-                <div className='mt-2 text-2xl font-bold'>{pagination.totalItems}</div>
-              </div>
-              <div className='rounded-2xl border border-base-300 bg-base-200/60 p-4'>
-                <div className='text-xs uppercase tracking-[0.2em] text-base-content/50'>Mode</div>
-                <div className='mt-2 text-lg font-semibold capitalize'>{forms}</div>
-              </div>
-            </div>
+    <div className='min-h-screen bg-gradient-to-br from-base-300 via-base-200 to-base-300 px-4 py-8 sm:px-6 lg:px-8'>
+      {/* Toast Notification */}
+      {toast && (
+        <div className='toast toast-top toast-end z-50'>
+          <div className={`alert ${toast.type === 'success' ? 'alert-success' : 'alert-error'} shadow-lg text-white flex items-center gap-2`}>
+            {toast.type === 'success' ? <FiCheckCircle /> : <FiAlertCircle />}
+            <span>{toast.message}</span>
           </div>
-          <div className='mt-4 rounded-2xl border border-base-300 bg-base-200/40 p-4'>
-            <div className='flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between'>
-              <div className='space-y-1'>
-                <p className='text-sm font-semibold uppercase tracking-[0.2em] text-primary'>Manual mail sender</p>
-                <p className='text-sm text-base-content/70'>Pick an author, edit the recipient email if needed, then send the birthday mail manually.</p>
+        </div>
+      )}
+
+      <div className='mx-auto max-w-7xl space-y-6 pt-4'>
+        {/* Header Dashboard Banner */}
+        <header className='relative overflow-hidden rounded-3xl border border-base-300 bg-base-100 p-6 shadow-2xl sm:p-8 backdrop-blur-md'>
+          <div className='absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl pointer-events-none'></div>
+          <div className='flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between'>
+            <div className='max-w-2xl space-y-2'>
+              <div className='inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary'>
+                <span className='h-2 w-2 rounded-full bg-primary animate-pulse'></span>
+                GOLPRO Studio Hub
               </div>
-              <button
-                type='button'
-                className='btn btn-secondary btn-sm'
-                onClick={handleSendBirthdayMail}
-                disabled={sendingBirthdayMail || !birthdayMailComposer.recipientEmail.trim()}
-              >
-                {birthdayMailButtonLabel}
-              </button>
-              <button type='button' className='btn btn-outline btn-sm' onClick={handleOpenBirthdayPreview} disabled={!birthdayMailComposer.authorId}>
-                Preview mail template
-              </button>
+              <h1 className='text-3xl font-black tracking-tight sm:text-4xl bg-gradient-to-r from-base-content to-base-content/70 bg-clip-text text-transparent'>
+                Admin Control Center
+              </h1>
+              <p className='text-sm text-base-content/70 sm:text-base'>
+                Manage content, seasons, episodes, genres, authors, and email dispatchers from a unified full-CRUD studio workspace.
+              </p>
             </div>
 
-            <div className='mt-4 grid gap-4 lg:grid-cols-[1fr_1fr]'>
-              <label className='form-control w-full'>
-                <span className='label-text font-medium'>Author</span>
-                <select
-                  className='select select-bordered w-full'
-                  value={birthdayMailComposer.authorId}
-                  onChange={(e) => handleSelectBirthdayAuthor(e.target.value)}
-                >
-                  <option value=''>Select an author</option>
-                  {authors.map((author) => (
-                    <option key={author.authorId} value={author.authorId}>
-                      {author.fullName} ({author.authorId})
-                    </option>
-                  ))}
-                </select>
-                {loadingAuthors && <span className='mt-2 text-xs text-base-content/60'>Loading authors...</span>}
-                {authorLoadError && <span className='mt-2 text-xs text-error'>{authorLoadError}</span>}
-              </label>
-
-              <label className='form-control w-full'>
-                <span className='label-text font-medium'>Recipient name</span>
-                <input
-                  className='input input-bordered w-full'
-                  value={birthdayMailComposer.recipientName}
-                  onChange={(e) => setBirthdayMailComposer({ ...birthdayMailComposer, recipientName: e.target.value })}
-                  placeholder='Enter recipient name'
-                />
-              </label>
-
-              <label className='form-control w-full'>
-                <span className='label-text font-medium'>Recipient email</span>
-                <input
-                  type='email'
-                  className='input input-bordered w-full'
-                  value={birthdayMailComposer.recipientEmail}
-                  onChange={(e) => setBirthdayMailComposer({ ...birthdayMailComposer, recipientEmail: e.target.value })}
-                  placeholder='Enter recipient email'
-                />
-              </label>
-
-              <label className='form-control w-full'>
-                <span className='label-text font-medium'>Recipient image URL</span>
-                <input
-                  className='input input-bordered w-full'
-                  value={birthdayMailComposer.recipientImageUrl}
-                  onChange={(e) => setBirthdayMailComposer({ ...birthdayMailComposer, recipientImageUrl: e.target.value })}
-                  placeholder='Optional author image URL'
-                />
-              </label>
-            </div>
-
-            <div className='mt-4 rounded-2xl border border-base-300 bg-base-100 p-4'>
-              <div className='flex items-center justify-between gap-3'>
-                <div>
-                  <div className='text-sm font-semibold uppercase tracking-[0.2em] text-primary'>Auto preview</div>
-                  <div className='text-sm text-base-content/70'>These works will be attached to the mail for the selected author.</div>
+            {/* Quick Metrics Cards */}
+            <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 lg:min-w-[24rem]'>
+              <div className='rounded-2xl border border-base-300 bg-base-200/50 p-4 backdrop-blur'>
+                <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-base-content/50'>
+                  <FiFilm className='text-primary' /> Visible Records
                 </div>
-                <div className='text-xs text-base-content/60'>{authorWorks.length} works</div>
+                <div className='mt-2 text-2xl font-black text-primary'>{pagination.totalItems}</div>
               </div>
-
-              {authorWorksPreview}
+              <div className='rounded-2xl border border-base-300 bg-base-200/50 p-4 backdrop-blur'>
+                <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-base-content/50'>
+                  <FiUsers className='text-secondary' /> Registered Authors
+                </div>
+                <div className='mt-2 text-2xl font-black text-secondary'>{authors.length}</div>
+              </div>
+              <div className='col-span-2 sm:col-span-1 rounded-2xl border border-base-300 bg-base-200/50 p-4 backdrop-blur'>
+                <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-base-content/50'>
+                  <FiLayers className='text-accent' /> Current Page
+                </div>
+                <div className='mt-2 text-2xl font-black text-accent'>{pagination.page} / {totalPages}</div>
+              </div>
             </div>
-
-            {birthdayMailMessage && <div className='mt-4 alert alert-info text-sm'>{birthdayMailMessage}</div>}
           </div>
         </header>
 
-        <nav className='flex flex-wrap gap-2 rounded-3xl border border-base-300 bg-base-100 p-2 shadow-lg shadow-black/5'>
-          {tabButtons}
+        {/* Tab Navigation */}
+        <nav className='flex overflow-x-auto gap-2 rounded-2xl border border-base-300 bg-base-100 p-2 shadow-lg backdrop-blur scrollbar-none'>
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = forms === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setForms(tab.key)}
+                className={`btn btn-sm flex-1 min-w-[120px] gap-2 transition-all ${
+                  isActive ? 'btn-primary shadow-md' : 'btn-ghost hover:bg-base-200'
+                }`}
+                type='button'
+              >
+                <Icon className='h-4 w-4' />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </nav>
 
-        {isContentTab && (
+        {/* CONTENTS TAB */}
+        {forms === 'content' && (
           <div className='grid gap-6 xl:grid-cols-[1.1fr_0.9fr]'>
-            <section className='space-y-4 rounded-3xl border border-base-300 bg-base-100/90 p-5 shadow-xl shadow-black/5 backdrop-blur sm:p-6'>
-              <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+            {/* Content List Section */}
+            <section className='space-y-4 rounded-3xl border border-base-300 bg-base-100 p-5 shadow-xl sm:p-6'>
+              <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
                 <div>
-                  <h2 className='text-2xl font-bold'>Published contents</h2>
-                  <p className='text-sm text-base-content/70'>Browse the latest records and jump straight into edit mode.</p>
+                  <h2 className='text-2xl font-bold flex items-center gap-2'>
+                    <FiFilm className='text-primary' /> Published Content
+                  </h2>
+                  <p className='text-sm text-base-content/70'>Search and manage audiobooks, drama, and digital content.</p>
                 </div>
-                <div className='flex gap-2'>
-                  <button className='btn btn-ghost btn-sm' onClick={refreshContents} type='button'>
-                    Refresh
-                  </button>
+                <button className='btn btn-ghost btn-sm gap-2' onClick={refreshContents} type='button'>
+                  <FiRefreshCw className={loadingContents ? 'animate-spin' : ''} /> Refresh
+                </button>
+              </div>
+
+              {/* Search & Filter Bar */}
+              <div className='grid gap-3 sm:grid-cols-[1fr_auto]'>
+                <div className='relative'>
+                  <FiSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40' />
+                  <input
+                    type='text'
+                    className='input input-bordered input-sm w-full pl-9'
+                    placeholder='Search title, ID, or description...'
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
                 </div>
+                <select
+                  className='select select-bordered select-sm'
+                  value={contentTypeFilter}
+                  onChange={(e) => setContentTypeFilter(e.target.value)}
+                >
+                  <option value='all'>All Types</option>
+                  <option value='audiobook'>Audiobook</option>
+                  <option value='podcast'>Podcast</option>
+                  <option value='drama'>Drama</option>
+                  <option value='series'>Series</option>
+                </select>
               </div>
 
               {loadingError && <div className='alert alert-error text-sm'>{loadingError}</div>}
 
-              <div className='space-y-3'>{contentGrid}</div>
+              {/* Contents Grid/List */}
+              <div className='space-y-3 min-h-[300px]'>
+                {loadingContents ? (
+                  <div className='flex min-h-48 items-center justify-center rounded-2xl border border-dashed border-base-300 text-base-content/60'>
+                    <span className='loading loading-dots loading-md text-primary'></span>
+                  </div>
+                ) : filteredContents.length > 0 ? (
+                  filteredContents.map((content) => (
+                    <article
+                      key={content.cId}
+                      className='group relative flex flex-col sm:flex-row gap-4 rounded-2xl border border-base-300 bg-base-200/40 p-4 transition-all hover:bg-base-200/80 hover:shadow-md'
+                    >
+                      <div className='relative h-36 w-full sm:w-44 shrink-0 overflow-hidden rounded-xl bg-base-300'>
+                        <Image
+                          src={
+                            content.cLandscape ||
+                            content.cBanner ||
+                            content.cCard ||
+                            content.cPortrait ||
+                            content.cLogo ||
+                            content.cSquare ||
+                            'https://placehold.co/400x225?text=No+Image'
+                          }
+                          alt={content.cTitle || content.cId}
+                          fill
+                          unoptimized
+                          className='object-cover transition-transform duration-300 group-hover:scale-105'
+                        />
+                      </div>
+                      <div className='flex flex-1 flex-col justify-between gap-3'>
+                        <div>
+                          <div className='flex flex-wrap items-center gap-2'>
+                            <span className='badge badge-primary badge-sm font-semibold capitalize'>
+                              {content.cContentType || 'content'}
+                            </span>
+                            <span className='badge badge-outline badge-sm font-mono'>{content.cId}</span>
+                          </div>
+                          <h3 className='mt-2 text-lg font-bold text-base-content line-clamp-1'>{content.cTitle}</h3>
+                          <p className='mt-1 text-xs text-base-content/70 line-clamp-2'>{content.cDescription}</p>
+                        </div>
 
+                        <div className='flex flex-wrap items-center justify-between gap-2 border-t border-base-300/50 pt-2'>
+                          <div className='flex gap-3 text-xs text-base-content/60 font-medium'>
+                            <span>Genres: {Array.isArray(content.cGenre) ? content.cGenre.length : 0}</span>
+                            <span>Authors: {Array.isArray(content.cAuthors) ? content.cAuthors.length : 0}</span>
+                            <span>Visits: {content.cUserVisit ?? 0}</span>
+                          </div>
+                          <div className='flex gap-1'>
+                            <button
+                              type='button'
+                              className='btn btn-ghost btn-xs text-info gap-1'
+                              title='View Details'
+                              onClick={() => setViewingContent(content)}
+                            >
+                              <FiEye /> Details
+                            </button>
+                            <button
+                              type='button'
+                              className='btn btn-outline btn-xs gap-1'
+                              onClick={() => setSelectedContent(content)}
+                            >
+                              <FiEdit2 /> Edit
+                            </button>
+                            <button
+                              type='button'
+                              className='btn btn-error btn-xs gap-1 text-white'
+                              onClick={() => setDeletingContent(content)}
+                            >
+                              <FiTrash2 /> Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  ))
+                ) : (
+                  <div className='flex min-h-48 items-center justify-center rounded-2xl border border-dashed border-base-300 text-base-content/60'>
+                    No content found matching your search.
+                  </div>
+                )}
+              </div>
+
+              {/* Pagination */}
               <div className='flex flex-col gap-3 border-t border-base-300 pt-4 sm:flex-row sm:items-center sm:justify-between'>
-                <div className='text-sm text-base-content/70'>
-                  Showing {contents.length} of {pagination.totalItems} contents
+                <div className='text-xs text-base-content/70'>
+                  Showing {filteredContents.length} of {pagination.totalItems} items (Page {pagination.page} of {totalPages})
                 </div>
-                <div className='join self-start sm:self-auto'>
+                <div className='join'>
                   <button
                     className='btn join-item btn-sm'
                     type='button'
@@ -577,8 +583,8 @@ export default function ContentUploading() {
                   >
                     Previous
                   </button>
-                  <button className='btn join-item btn-sm btn-ghost pointer-events-none' type='button'>
-                    {pagination.page} / {totalPages}
+                  <button className='btn join-item btn-sm btn-ghost pointer-events-none font-bold' type='button'>
+                    {pagination.page}
                   </button>
                   <button
                     className='btn join-item btn-sm'
@@ -592,12 +598,14 @@ export default function ContentUploading() {
               </div>
             </section>
 
+            {/* Content Add/Edit Form */}
             <div className='space-y-4'>
               <ContentAddingForm
                 email={session?.user?.email ?? ''}
-                  mode={contentFormMode}
+                mode={selectedContent ? 'edit' : 'create'}
                 content={selectedContent}
                 onSaved={() => {
+                  showToast(selectedContent ? 'Content updated successfully!' : 'New content created successfully!', 'success');
                   setSelectedContent(null);
                   refreshContents();
                 }}
@@ -607,24 +615,177 @@ export default function ContentUploading() {
           </div>
         )}
 
+        {/* OTHER ENTITY TABS */}
         {forms === 'seasons' && <SeasonAddingForm email={session?.user?.email ?? ''} />}
         {forms === 'episodes' && <EpisodeAddingForm email={session?.user?.email ?? ''} />}
         {forms === 'genre' && <GenreAddingForm email={session?.user?.email ?? ''} />}
         {forms === 'authors' && <AuthorAddingForm email={session?.user?.email ?? ''} />}
 
+        {/* MAIL SENDER DISPATCHER CARD */}
+        <section className='rounded-3xl border border-base-300 bg-base-100 p-6 shadow-xl space-y-4'>
+          <div className='flex flex-col gap-2 border-b border-base-300 pb-4'>
+            <div className='inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary'>
+              <FiMail /> Automated Birthday Email Dispatcher
+            </div>
+            <h2 className='text-2xl font-bold'>Author Mail Studio</h2>
+            <p className='text-sm text-base-content/70'>Select an author to test and dispatch personalized promotional birthday newsletters.</p>
+          </div>
+
+          <div className='grid gap-4 lg:grid-cols-4'>
+            <label className='form-control w-full'>
+              <span className='label-text font-medium'>Author</span>
+              <select
+                className='select select-bordered w-full'
+                value={birthdayMailComposer.authorId}
+                onChange={(e) => handleSelectBirthdayAuthor(e.target.value)}
+              >
+                <option value=''>Select an author</option>
+                {authors.map((author) => (
+                  <option key={author.authorId} value={author.authorId}>
+                    {author.fullName} ({author.authorId})
+                  </option>
+                ))}
+              </select>
+              {loadingAuthors && <span className='mt-1 text-xs text-info'>Loading authors list...</span>}
+              {authorLoadError && <span className='mt-1 text-xs text-error'>{authorLoadError}</span>}
+            </label>
+
+            <label className='form-control w-full'>
+              <span className='label-text font-medium'>Recipient Name</span>
+              <input
+                className='input input-bordered w-full'
+                value={birthdayMailComposer.recipientName}
+                onChange={(e) => setBirthdayMailComposer({ ...birthdayMailComposer, recipientName: e.target.value })}
+                placeholder='Recipient Name'
+              />
+            </label>
+
+            <label className='form-control w-full'>
+              <span className='label-text font-medium'>Recipient Email</span>
+              <input
+                type='email'
+                className='input input-bordered w-full'
+                value={birthdayMailComposer.recipientEmail}
+                onChange={(e) => setBirthdayMailComposer({ ...birthdayMailComposer, recipientEmail: e.target.value })}
+                placeholder='Recipient Email'
+              />
+            </label>
+
+            <div className='flex items-end gap-2'>
+              <button
+                type='button'
+                className='btn btn-primary flex-1'
+                onClick={handleSendBirthdayMail}
+                disabled={sendingBirthdayMail || !birthdayMailComposer.recipientEmail.trim()}
+              >
+                {sendingBirthdayMail ? <span className='loading loading-spinner loading-xs'></span> : <FiMail />} Send Mail
+              </button>
+              <button
+                type='button'
+                className='btn btn-outline'
+                onClick={() => setShowMailPreview(true)}
+                disabled={!birthdayMailComposer.authorId}
+              >
+                <FiEye /> Preview
+              </button>
+            </div>
+          </div>
+
+          {loadingAuthorWorks && <div className='text-xs text-info'>Loading author works preview...</div>}
+          {authorWorksError && <div className='alert alert-error text-xs'>{authorWorksError}</div>}
+
+          {birthdayMailMessage && <div className='alert alert-info text-sm'>{birthdayMailMessage}</div>}
+        </section>
+
+        {/* MODAL: VIEW DETAILS */}
+        {viewingContent && (
+          <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm'>
+            <div className='card w-full max-w-2xl bg-base-100 p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto'>
+              <div className='flex items-start justify-between border-b border-base-300 pb-3'>
+                <div>
+                  <span className='badge badge-primary text-xs capitalize'>{viewingContent.cContentType}</span>
+                  <h3 className='text-2xl font-bold mt-1'>{viewingContent.cTitle}</h3>
+                  <p className='text-xs font-mono text-base-content/60'>ID: {viewingContent.cId}</p>
+                </div>
+                <button className='btn btn-ghost btn-sm btn-circle' onClick={() => setViewingContent(null)}>✕</button>
+              </div>
+
+              <div className='relative h-56 w-full rounded-2xl bg-base-300 overflow-hidden'>
+                <Image
+                  src={viewingContent.cLandscape || viewingContent.cBanner || viewingContent.cCard || viewingContent.cPortrait || 'https://placehold.co/600x300'}
+                  alt={viewingContent.cTitle || 'Content image'}
+                  fill
+                  unoptimized
+                  className='object-cover'
+                />
+              </div>
+
+              <div className='space-y-2'>
+                <h4 className='font-semibold text-sm'>Description:</h4>
+                <p className='text-sm text-base-content/80 whitespace-pre-line'>{viewingContent.cDescription || 'No description provided.'}</p>
+              </div>
+
+              <div className='grid grid-cols-2 gap-4 text-xs bg-base-200/50 p-4 rounded-2xl'>
+                <div><span className='font-bold'>Visits:</span> {viewingContent.cUserVisit ?? 0}</div>
+                <div><span className='font-bold'>Viewer Age:</span> {viewingContent.cViwersAge || 'All'}</div>
+                <div><span className='font-bold'>Genres:</span> {Array.isArray(viewingContent.cGenre) ? viewingContent.cGenre.length : 0}</div>
+                <div><span className='font-bold'>Authors:</span> {Array.isArray(viewingContent.cAuthors) ? viewingContent.cAuthors.length : 0}</div>
+              </div>
+
+              <div className='flex justify-end gap-2 border-t border-base-300 pt-3'>
+                <button className='btn btn-ghost btn-sm' onClick={() => setViewingContent(null)}>Close</button>
+                <button
+                  className='btn btn-primary btn-sm'
+                  onClick={() => {
+                    setSelectedContent(viewingContent);
+                    setViewingContent(null);
+                  }}
+                >
+                  Edit Content
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL: DELETE CONFIRMATION */}
+        {deletingContent && (
+          <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-fadeIn'>
+            <div className='card w-full max-w-md bg-base-100 p-6 shadow-2xl space-y-4 border border-base-300'>
+              <div className='flex items-center gap-3 text-error'>
+                <FiTrash2 className='h-8 w-8' />
+                <h3 className='text-xl font-bold'>Confirm Content Deletion</h3>
+              </div>
+              <p className='text-sm text-base-content/80'>
+                Are you sure you want to permanently delete <strong className='text-base-content'>{deletingContent.cTitle || deletingContent.cId}</strong>?
+                This action cannot be undone.
+              </p>
+              <div className='flex justify-end gap-3 pt-2'>
+                <button className='btn btn-ghost btn-sm' onClick={() => setDeletingContent(null)} disabled={isDeleting}>
+                  Cancel
+                </button>
+                <button className='btn btn-error btn-sm text-white' onClick={confirmDeleteContent} disabled={isDeleting}>
+                  {isDeleting ? <span className='loading loading-spinner loading-xs'></span> : 'Delete Content'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL: MAIL PREVIEW */}
         {showMailPreview && (
           <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4'>
-            <div className='flex h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-2xl shadow-black/40'>
-              <div className='flex items-center justify-between gap-3 border-b border-base-300 px-4 py-3 sm:px-6'>
+            <div className='flex h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-2xl'>
+              <div className='flex items-center justify-between border-b border-base-300 px-6 py-4'>
                 <div>
-                  <div className='text-sm font-semibold uppercase tracking-[0.2em] text-primary'>Mail preview</div>
-                  <div className='text-sm text-base-content/70'>Review the full birthday email before sending.</div>
+                  <div className='text-xs font-semibold uppercase tracking-wider text-primary'>Email Template Live Preview</div>
+                  <div className='text-sm text-base-content/70'>Newsletter layout sent to selected author.</div>
                 </div>
                 <button type='button' className='btn btn-ghost btn-sm' onClick={() => setShowMailPreview(false)}>
                   Close
                 </button>
               </div>
-              <div className='flex-1 bg-base-200 p-3 sm:p-4'>
+              <div className='flex-1 bg-base-200 p-4'>
                 <iframe title='Birthday mail preview' className='h-full w-full rounded-2xl border border-base-300 bg-white' srcDoc={birthdayMailPreviewHtml} />
               </div>
             </div>

@@ -138,7 +138,7 @@ export default function EpisodePage() {
                 <div className='absolute contents-bg w-full h-full bottom-0' />
                 <div className='w-full flex p-5 justify-center absolute bottom-2'>
                     <div className=" md:max-w-2/3 w-full flex justify-between items-center">
-                        {episode && <Image unoptimized src={episode.cLogo} alt="Logo Image" width='200' height='200' className={`!w-1/3 lg:!w-1/8 object-cover`} loading='eager' />}
+                        {episode && <Image unoptimized src={episode.cLogo} alt="Logo Image" width={200} height={200} className={`!w-1/3 lg:!w-1/8 object-cover`} style={{ height: 'auto' }} loading='eager' />}
                         <div className='flex flex-col justify-end text-right'>
                             <h1>Episode: {episode?.cNo}</h1>
                             <h1 className='text-xs'>{episode?.cTitle}</h1>

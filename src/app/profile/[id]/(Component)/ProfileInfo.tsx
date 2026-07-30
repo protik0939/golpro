@@ -6,7 +6,7 @@ import '../../../(Authentication)/login/(components)/glow.css';
 import Image from 'next/image';
 import React, { useState, useRef, useEffect } from 'react';
 import Cropper, { ReactCropperElement } from 'react-cropper';
-import '/node_modules/react-cropper/node_modules/cropperjs/dist/cropper.css';
+import 'react-cropper/node_modules/cropperjs/dist/cropper.css';
 import axios from 'axios';
 import { TbPhotoEdit } from 'react-icons/tb';
 import { useRouter } from 'next/navigation';

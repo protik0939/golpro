@@ -53,7 +53,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="icon"
@@ -62,7 +62,7 @@ export default function RootLayout({
         />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`${bd.className} ${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${bd.className} ${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
         <ServiceWorker />
         <ThemeProvider>
           <MusicProvider>

@@ -275,73 +275,121 @@ export default function ContentAddingForm({ email, mode = 'create', content, onS
           </label>
         </div>
 
-        <div className='grid gap-4 lg:grid-cols-2'>
-          <div className='space-y-3'>
-            <div className='flex items-center justify-between'>
-              <h3 className='text-lg font-semibold'>Images</h3>
-              <span className='text-xs text-base-content/60'>Upload or replace individual artwork fields.</span>
-            </div>
-            <div className='grid gap-4 sm:grid-cols-2'>
-              {imagePreviewFields.map((field) => {
-                const imageValue = contentData[field.key];
-
-                return (
-                  <label key={field.key} className='space-y-2 rounded-2xl border border-base-300 bg-base-200/40 p-4'>
-                    <div className='flex items-center justify-between gap-2'>
-                      <span className='font-medium'>{field.label}</span>
-                      {imageValue ? <span className='badge badge-neutral badge-sm'>Ready</span> : <span className='badge badge-outline badge-sm'>Empty</span>}
-                    </div>
-                    {imageValue ? (
-                      <Image src={imageValue} alt={`${field.label} preview`} width={640} height={224} unoptimized className='h-28 w-full rounded-xl object-cover' />
-                    ) : (
-                      <div className='flex h-28 items-center justify-center rounded-xl border border-dashed border-base-300 text-sm text-base-content/50'>
-                        No preview yet
-                      </div>
-                    )}
-                    <input type='file' className='file-input file-input-bordered file-input-sm w-full' onChange={(e) => handleFileUpload(e, field.key)} />
+        {/* Taxonomy & Display Settings */}
+        <div className='space-y-4'>
+          <div className='grid gap-4 grid-cols-1 md:grid-cols-2'>
+            <fieldset className='rounded-2xl border border-base-300 bg-base-200/40 p-4 flex flex-col justify-between min-w-0'>
+              <legend className='px-2 text-sm font-semibold flex items-center gap-2'>
+                <span>Genres</span>
+                {contentData.cGenre.length > 0 ? (
+                  <span className='badge badge-primary badge-sm'>{contentData.cGenre.length}</span>
+                ) : null}
+              </legend>
+              <div className='max-h-48 space-y-1 overflow-y-auto pr-1'>
+                {genres.map((genre) => (
+                  <label className='flex items-center gap-3 rounded-xl px-2.5 py-1.5 hover:bg-base-200 cursor-pointer transition-colors' key={genre.genreId}>
+                    <input type='checkbox' className='checkbox checkbox-sm checkbox-primary' checked={contentData.cGenre.includes(genre.genreId)} onChange={() => handleCheckboxChange(genre.genreId, 'cGenre')} />
+                    <span className='text-sm font-medium truncate'>{genre.genreName}</span>
                   </label>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset className='rounded-2xl border border-base-300 bg-base-200/40 p-4 flex flex-col justify-between min-w-0'>
+              <legend className='px-2 text-sm font-semibold flex items-center gap-2'>
+                <span>Authors</span>
+                {contentData.cAuthors.length > 0 ? (
+                  <span className='badge badge-primary badge-sm'>{contentData.cAuthors.length}</span>
+                ) : null}
+              </legend>
+              <div className='max-h-48 space-y-1 overflow-y-auto pr-1'>
+                {authors.map((author) => (
+                  <label className='flex items-center gap-3 rounded-xl px-2.5 py-1.5 hover:bg-base-200 cursor-pointer transition-colors' key={author.authorId}>
+                    <input type='checkbox' className='checkbox checkbox-sm checkbox-primary' checked={contentData.cAuthors.includes(author.authorId)} onChange={() => handleCheckboxChange(author.authorId, 'cAuthors')} />
+                    <span className='text-sm font-medium truncate'>{author.fullName}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
           </div>
 
-          <div className='space-y-4'>
-            <div className='grid gap-4 md:grid-cols-2'>
-              <fieldset className='rounded-2xl border border-base-300 bg-base-200/40 p-4'>
-                <legend className='px-2 text-sm font-semibold'>Genres</legend>
-                <div className='max-h-56 space-y-2 overflow-y-auto pr-1'>
-                  {genres.map((genre) => (
-                    <label className='flex items-center gap-3 rounded-xl px-2 py-1.5 hover:bg-base-200' key={genre.genreId}>
-                      <input type='checkbox' className='checkbox checkbox-sm' checked={contentData.cGenre.includes(genre.genreId)} onChange={() => handleCheckboxChange(genre.genreId, 'cGenre')} />
-                      <span className='text-sm'>{genre.genreName}</span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-
-              <fieldset className='rounded-2xl border border-base-300 bg-base-200/40 p-4'>
-                <legend className='px-2 text-sm font-semibold'>Authors</legend>
-                <div className='max-h-56 space-y-2 overflow-y-auto pr-1'>
-                  {authors.map((author) => (
-                    <label className='flex items-center gap-3 rounded-xl px-2 py-1.5 hover:bg-base-200' key={author.authorId}>
-                      <input type='checkbox' className='checkbox checkbox-sm' checked={contentData.cAuthors.includes(author.authorId)} onChange={() => handleCheckboxChange(author.authorId, 'cAuthors')} />
-                      <span className='text-sm'>{author.fullName}</span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
+          <div className='rounded-2xl border border-base-300 bg-base-200/40 p-4'>
+            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+              <div>
+                <span className='text-sm font-semibold block'>Display Dimensions</span>
+                <span className='text-xs text-base-content/60'>Set target aspect ratio or default resolution specs.</span>
+              </div>
+              <div className='grid grid-cols-2 gap-4 sm:w-80'>
+                <label className='form-control w-full'>
+                  <span className='label-text font-medium text-xs'>Width (px)</span>
+                  <input type='number' min='0' className='input input-bordered input-sm w-full' value={contentData.width} onChange={(e) => setContentData({ ...contentData, width: Number(e.target.value) })} />
+                </label>
+                <label className='form-control w-full'>
+                  <span className='label-text font-medium text-xs'>Height (px)</span>
+                  <input type='number' min='0' className='input input-bordered input-sm w-full' value={contentData.height} onChange={(e) => setContentData({ ...contentData, height: Number(e.target.value) })} />
+                </label>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <div className='grid gap-4 md:grid-cols-2'>
-              <label className='form-control w-full'>
-                <span className='label-text font-medium'>Width</span>
-                <input type='number' min='0' className='input input-bordered w-full' value={contentData.width} onChange={(e) => setContentData({ ...contentData, width: Number(e.target.value) })} />
-              </label>
-              <label className='form-control w-full'>
-                <span className='label-text font-medium'>Height</span>
-                <input type='number' min='0' className='input input-bordered w-full' value={contentData.height} onChange={(e) => setContentData({ ...contentData, height: Number(e.target.value) })} />
-              </label>
-            </div>
+        {/* Artwork & Images Upload Section */}
+        <div className='space-y-4 pt-4 border-t border-base-300'>
+          <div>
+            <h3 className='text-lg font-bold'>Artwork & Images</h3>
+            <p className='text-xs text-base-content/60'>Upload or replace artwork files for various display layouts.</p>
+          </div>
+
+          <div className='grid gap-3 grid-cols-1'>
+            {imagePreviewFields.map((field) => {
+              const imageValue = contentData[field.key];
+
+              return (
+                <div key={field.key} className='flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-base-300 bg-base-200/40 p-4 transition-all hover:border-base-400'>
+                  <div className='flex items-center justify-between w-full sm:w-auto sm:justify-start gap-3 sm:min-w-44 shrink-0'>
+                    <div className='flex flex-col gap-0.5'>
+                      <span className='font-bold text-sm text-base-content'>{field.label}</span>
+                      <span className='text-xs text-base-content/50'>Artwork Asset</span>
+                    </div>
+                    {imageValue ? (
+                      <span className='badge badge-success badge-sm font-medium text-white shrink-0'>Uploaded</span>
+                    ) : (
+                      <span className='badge badge-ghost badge-sm text-xs text-base-content/50 shrink-0'>Empty</span>
+                    )}
+                  </div>
+
+                  <div className='h-20 w-36 shrink-0 overflow-hidden rounded-xl border border-base-300/80 bg-base-100/50 flex items-center justify-center'>
+                    {imageValue ? (
+                      <div className='relative h-full w-full'>
+                        <Image src={imageValue} alt={`${field.label} preview`} fill unoptimized className='object-cover' />
+                      </div>
+                    ) : (
+                      <div className='flex flex-col items-center justify-center gap-1 p-2 text-center text-xs text-base-content/40'>
+                        <svg className='h-5 w-5 opacity-40' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' />
+                        </svg>
+                        <span className='text-[10px]'>No preview</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className='w-full sm:w-auto shrink-0 flex justify-end'>
+                    <label className='btn btn-outline btn-sm gap-2 cursor-pointer w-full sm:w-auto'>
+                      <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12' />
+                      </svg>
+                      <span>{imageValue ? 'Replace File' : 'Choose File'}</span>
+                      <input
+                        type='file'
+                        accept='image/*'
+                        className='hidden'
+                        onChange={(e) => handleFileUpload(e, field.key)}
+                      />
+                    </label>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
