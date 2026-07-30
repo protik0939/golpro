@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
+import withPWAInit from "@ducanh2912/next-pwa";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const withPWA = require("next-pwa")({
-  dest: 'public', // Destination for PWA files (sw.js and workbox-*.js)
-  register: true,  // Auto-register the service worker
-  skipWaiting: true, // Skip waiting to activate service worker immediately
-  disable: process.env.NODE_ENV === "development", // Disable PWA in development
+const withPWA = withPWAInit({
+  dest: "public",
+  register: true,
+  disable: process.env.NODE_ENV === "development",
+  workboxOptions: {
+    skipWaiting: true,
+  },
 });
 
 // Main Next.js configuration
@@ -34,3 +36,4 @@ const nextConfig: NextConfig = {
 };
 
 export default withPWA(nextConfig);
+

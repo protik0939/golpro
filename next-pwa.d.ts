@@ -1,8 +1,1 @@
-declare module 'next-pwa' {
-    import { NextConfig } from "next";
-  
-    function withPWA(config: NextConfig): NextConfig;
-  
-    export default withPWA;
-  }
-  
+// Custom next-pwa type definitions replaced by native TypeScript types from @ducanh2912/next-pwa
