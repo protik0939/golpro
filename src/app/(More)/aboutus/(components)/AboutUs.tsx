@@ -1,5 +1,5 @@
 import React from 'react'
-import golproLogo from '../../../../../public/golproLogoSvg.svg';
+import golproLogo from '@/app/assets/logos/golproLogoSvg.svg';
 import { FaFacebook, FaYoutube, FaInstagram } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,10 +12,9 @@ export default function AboutUs() {
                 <Image
                     src={golproLogo}
                     alt="Golpro Logo"
-                    height={200}
-                    width={400}
+                    height={47}
+                    width={100}
                     className="w-44 h-auto mb-4"
-                    style={{ width: 'auto', height: 'auto' }}
                 />
                 <h1 className="text-4xl font-bold">আমাদের সম্পর্কে</h1>
             </div>

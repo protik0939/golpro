@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image';
-import golproLogo from '../../../public/golproLogoSvg.svg';
+import golproLogo from '@/app/assets/logos/golproLogoSvg.svg';
 import './logoanimation.css';
 import Link from 'next/link';
 import Example from './button';
@@ -22,7 +22,7 @@ export default function Navbar() {
                 <div className={`navbar z-50 transition-all duration-300`}>
                     <div className="navbar-start">
                         <Link href={"/"} className="text-slate-400">
-                            <Image className='animated-svg' height={47} width={100} src={golproLogo} alt="logo" style={{ width: 'auto', height: 'auto' }} />
+                            <Image className='animated-svg w-[100px] h-auto' height={47} width={100} src={golproLogo} alt="logo" priority />
                         </Link>
                     </div>
                     <div className="navbar-center">
